@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
-get_last_tag() {
+#
+#
+# FUNCTIONS
+#
+# --------------------
+function join {
+    local IFS="$1"; shift; echo "$*";
+}
+
+git_last_tag() {
     git describe origin/master
 }
 
-read_git_log() {
+git_log() {
     git log --pretty="format:- %h %s [%an]" ${1}..HEAD
 }
 
@@ -22,7 +31,29 @@ Options:
 "
 }
 
-function join { local IFS="$1"; shift; echo "$*"; }
+function echo_error() {
+    local error_message="ERROR. ${1}.";
+
+    if [ "$2" = true ] ; then
+        error_message=$(echo -e "${error_message} aborting.")
+    fi
+
+    echo -e "${error_message}";
+}
+
+function echo_info() {
+    echo -e "INFO. ${1}."
+}
+
+
+
+# ---------------------------
+#
+#
+# RUN
+#
+#
+# ---------------------------
 
 #
 # PARSE OPTIONS
@@ -31,30 +62,34 @@ function join { local IFS="$1"; shift; echo "$*"; }
 #
 # * -p : push to remote
 #
-
 push_flag='false'
+current_tag="";
+new_tag="0"
+release_type=""
 
 while getopts 'ph' flag; do
   case "${flag}" in
     h) echo_help; exit; break;;
     p) push_flag='true' ;;
-    *) echo "ERROR. Unexpected option. aborting."; echo_help; exit; break;;
+    *) echo_error "Unexpected option" true; echo_help; exit; break;;
   esac
 done
-
 
 #
 # FETCH ALL
 #
 if git fetch --all
-then echo "INFO. git fetch completed."
-else echo "ERROR. aborting."; exit 1;
+then echo_info "git fetch completed"
+else echo_error "" true; exit 1;
 fi
 
 
-current_tag=$(get_last_tag)
-new_tag="0"
-release_type=""
+current_tag=$(git_last_tag)
+if [ -z "$current_tag" ]; then
+    echo_info "can't find current tag into origin/master, assume it's the first release"
+fi
+current_tag="0.1.0"
+
 
 #
 # CHOOSE TYPE OF RELEASE (fix, minor, major)
@@ -71,7 +106,6 @@ done
 #
 # CALCULATE NEW RELEASE TAG
 #
-echo "..calculate new '${release_type}' tag.."
 IFS='. ' read -a array <<< "$current_tag"
 if [ "${release_type}" == "fix" ];
 then let array[2]=array[2]+1;
@@ -89,18 +123,18 @@ new_tag=$(join . "${array[@]}")
 #
 echo "
 
-INFOS
+INFO
 
 last release: '${current_tag}'
 next release: '${new_tag}'
 
 "
 
-echo "INFOS looks right?"
+echo "looks right?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) break;;
-        No ) echo "ERROR. aborting."; exit;;
+        No ) echo_error "not confirmed" true; exit;;
     esac
 done
 
@@ -110,10 +144,10 @@ done
 new_date=$(date "+(%Y-%m-%d)")
 new_header="# ${new_tag} ${new_date}"
 
-new_body="$(read_git_log ${current_tag})"
+new_body="$(git_log ${current_tag})"
 
 if [ -z "$new_body" ]; then
-    echo "ERROR. no changes since last version. aborting."; exit 1;
+    echo_error "no changes since last version" true; exit 1;
 fi
 
 echo -e "${new_header}\n\n${new_body}\n\n" > .CHANGELOG.tmp.md;
@@ -122,7 +156,7 @@ vi .CHANGELOG.md -c ":r .CHANGELOG.tmp.md"
 rm -f .CHANGELOG.tmp.md;
 
 if [ ! -f .CHANGELOG.md ]; then
-    echo "ERROR. aborting."; exit 1;
+    echo_error "" true; exit 1;
 fi
 
 #
@@ -132,8 +166,8 @@ git checkout master;
 
 # append changelog message
 if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
-then echo "INFO. CHANGELOG.md was modified."; rm -f .CHANGELOG.md;
-else echo "ERROR. aborting."; exit 1;
+then echo_info "CHANGELOG.md was modified"; rm -f .CHANGELOG.md;
+else echo_error "" true; exit 1;
 fi
 
 # add changelog and commit
