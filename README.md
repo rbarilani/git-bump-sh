@@ -24,8 +24,7 @@ Adds this to your composer.json and run ```composer update truelab/git-bump-sh``
 ## Limitations, conventions and assumptions 
 
 * Follow semantic versioning
-* Tag are used only for release versioning 
-* The first git tag is up to you
+* Tags are used only to mark a release
 * A CHANGELOG.md markdown file is used to track changes
 * Run this command from the root of your project folder (where CHANGELOG.md resides)
 
