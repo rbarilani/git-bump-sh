@@ -1,0 +1,14 @@
+{
+    "name": "truelab/git-bump-sh",
+    "description": "Simple shell script to bump a new version of a package with git",
+    "type": "bin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ruben Barilani",
+            "email": "ruben.barilani.dev@gmail.com"
+        }
+    ],
+    "require": {},
+    "bin": ["bin/bump"]
+}

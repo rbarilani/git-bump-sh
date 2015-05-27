@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+
+get_last_tag() {
+    git describe origin/master
+}
+
+read_git_log() {
+    git log --pretty="format:- %h %s [%an]" ${1}..HEAD
+}
+
+function echo_help() {
+    echo -e "
+Usage:
+
+bump [-ph]
+
+Options:
+
+* -h : print this help
+* -p : push to remote
+
+"
+}
+
+function join { local IFS="$1"; shift; echo "$*"; }
+
+#
+# PARSE OPTIONS
+#
+# options:
+#
+# * -p : push to remote
+#
+
+push_flag='false'
+
+while getopts 'ph' flag; do
+  case "${flag}" in
+    h) echo_help; exit; break;;
+    p) push_flag='true' ;;
+    *) echo "ERROR. Unexpected option. aborting."; echo_help; exit; break;;
+  esac
+done
+
+
+#
+# FETCH ALL
+#
+if git fetch --all
+then echo "INFO. git fetch completed."
+else echo "ERROR. aborting."; exit 1;
+fi
+
+
+current_tag=$(get_last_tag)
+new_tag="0"
+release_type=""
+
+#
+# CHOOSE TYPE OF RELEASE (fix, minor, major)
+#
+echo "it's a fix, a minor or a major release?"
+select release in "fix" "minor" "major"; do
+    case $release in
+        fix ) release_type="fix"; break;;
+        minor ) release_type="minor"; break;;
+        major ) release_type="major"; break;;
+    esac
+done
+
+#
+# CALCULATE NEW RELEASE TAG
+#
+echo "..calculate new '${release_type}' tag.."
+IFS='. ' read -a array <<< "$current_tag"
+if [ "${release_type}" == "fix" ];
+then let array[2]=array[2]+1;
+else
+    if [ "${release_type}" == "minor" ];
+    then let array[1]=array[1]+1;
+    else let array[0]=array[0]+1;
+    fi
+fi
+new_tag=$(join . "${array[@]}")
+
+
+#
+# CONFIRM INFORMATION (last and new git tags)
+#
+echo "
+
+INFOS
+
+last release: '${current_tag}'
+next release: '${new_tag}'
+
+"
+
+echo "INFOS looks right?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) break;;
+        No ) echo "ERROR. aborting."; exit;;
+    esac
+done
+
+# WRITE CHAGELOG MESSAGE TO A TEMP FILE
+# EDIT CHANGELOG
+
+new_date=$(date "+(%Y-%m-%d)")
+new_header="# ${new_tag} ${new_date}"
+
+new_body="$(read_git_log ${current_tag})"
+
+if [ -z "$new_body" ]; then
+    echo "ERROR. no changes since last version. aborting."; exit 1;
+fi
+
+echo -e "${new_header}\n\n${new_body}\n\n" > .CHANGELOG.tmp.md;
+
+vi .CHANGELOG.md -c ":r .CHANGELOG.tmp.md"
+rm -f .CHANGELOG.tmp.md;
+
+if [ ! -f .CHANGELOG.md ]; then
+    echo "ERROR. aborting."; exit 1;
+fi
+
+#
+# GIT OPERATIONS
+#
+git checkout master;
+
+# append changelog message
+if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
+then echo "INFO. CHANGELOG.md was modified."; rm -f .CHANGELOG.md;
+else echo "ERROR. aborting."; exit 1;
+fi
+
+# add changelog and commit
+git add CHANGELOG.md;
+git commit -m "
+${new_tag}
+
+${new_header}
+
+${new_body}
+";
+
+# add tag
+git tag -a ${new_tag} -m "${new_tag}";
+
+# push master and the new tag to remote
+if ${push_flag} == 'true'
+then git push origin master && git push origin ${new_tag};
+fi
+
+# resync local dev branch and remote dev branch
+git checkout dev && git rebase master;
+
+if ${push_flag} == 'true'
+then git push origin dev;
+fi
+
+echo -e "\nINFO. done!";
