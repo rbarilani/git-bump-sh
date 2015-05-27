@@ -1,3 +1,8 @@
+# 0.2.0 (2015-05-28)
+
+- 4e89e57 don't push to remote option [Ruben Barilani]
+
+
 # 0.1.0 (2015-05-28)
 
 - 2364961 updates README.md, updates bin/bump [Ruben Barilani]
@@ -5,6 +10,3 @@
 - cbbe8d5 updates README.md [Ruben Barilani]
 - 144cb68 adds vendor folder to .gitignore [Ruben Barilani]
 - a276473 first commit [Ruben Barilani]
-
-
-
