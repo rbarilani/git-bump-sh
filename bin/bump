@@ -28,12 +28,12 @@ function echo_help() {
     echo -e "
 Usage:
 
-bump [-ph]
+bump [-sh]
 
 Options:
 
 * -h : print this help
-* -p : push to remote
+* -s : don't push to remote
 
 "
 }
@@ -42,7 +42,7 @@ function echo_error() {
     local error_message="ERROR.";
 
     if [ ! -z "$1" ]; then
-        error_message=$(echo -e "${1}.")
+        error_message=$(echo -e "${error_message} ${1}.")
     fi
 
     if [ "$2" = true ] ; then
@@ -71,17 +71,17 @@ function echo_info() {
 #
 # options:
 #
-# * -p : push to remote
+# * -s : don't push to remote
 #
-push_flag='false'
+push_flag='true'
 current_tag="";
 new_tag="0"
 release_type=""
 
-while getopts 'ph' flag; do
+while getopts 'sh' flag; do
   case "${flag}" in
     h) echo_help; exit; break;;
-    p) push_flag='true' ;;
+    s) push_flag='false' ;;
     *) echo_error "Unexpected option" true; echo_help; exit; break;;
   esac
 done

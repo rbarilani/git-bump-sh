@@ -35,12 +35,12 @@ Assuming composer has installed the script in the path ```bin / bump``` .
 
 ```bash
 
-bin/bump [-ph]
+bin/bump [-sh]
 
 Options:
 
 * -h : print this help
-* -p : push to remote
+* -s : don't push to remote
 
 ```
 
