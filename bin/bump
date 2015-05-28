@@ -13,6 +13,16 @@ git_last_tag() {
     git describe origin/master
 }
 
+function git_tag_exists() {
+
+    if git show-ref --tags | egrep -q "refs/tags/$1$"
+    then
+        echo true
+    else
+        echo false
+    fi
+}
+
 git_log() {
 
     local format="format:- %h %s [%an]";
@@ -59,8 +69,6 @@ function echo_error() {
 function echo_info() {
     echo -e "INFO. ${1}."
 }
-
-
 
 # ---------------------------
 #
@@ -143,6 +151,9 @@ else
     new_tag="0.1.0"
 fi
 
+if [ $(git_tag_exists ${new_tag}) = true ];
+then echo_error "'${new_tag}' git tag already exists" true; exit;
+fi;
 
 #
 # CONFIRM INFORMATION (last and new git tags)
@@ -164,9 +175,9 @@ select yn in "Yes" "No"; do
     esac
 done
 
+
 # WRITE CHAGELOG MESSAGE TO A TEMP FILE
 # EDIT CHANGELOG
-
 new_date=$(date "+(%Y-%m-%d)")
 new_header="# ${new_tag} ${new_date}"
 
