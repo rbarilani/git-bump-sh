@@ -1,3 +1,8 @@
+# 0.4.1 (2015-05-28)
+
+- a85c997 check tag already exists [Ruben Barilani]
+
+
 # 0.4.0 (2015-05-28)
 
 - 10edef6 permits release only on the master branch, optionally resync dev branch [Ruben Barilani]
