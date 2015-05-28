@@ -24,6 +24,10 @@ git_log() {
     fi;
 }
 
+git_current_branch() {
+    git rev-parse --abbrev-ref HEAD
+}
+
 function echo_help() {
     echo -e "
 Usage:
@@ -66,18 +70,20 @@ function echo_info() {
 #
 # ---------------------------
 
-#
-# PARSE OPTIONS
-#
-# options:
-#
-# * -s : don't push to remote
-#
+current_git_branch="$(git_current_branch)"
 push_flag='true'
 current_tag="";
 new_tag="0"
 release_type=""
 
+#
+# PARSE OPTIONS
+#
+# options:
+#
+# * -h : print this help
+# * -s : don't push to remote
+#
 while getopts 'sh' flag; do
   case "${flag}" in
     h) echo_help; exit; break;;
@@ -85,6 +91,10 @@ while getopts 'sh' flag; do
     *) echo_error "Unexpected option" true; echo_help; exit; break;;
   esac
 done
+
+if [ ! "$current_git_branch" = "master" ]; then
+    echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit;
+fi;
 
 #
 # FETCH ALL
@@ -128,6 +138,7 @@ if [ ! -z "$current_tag" ]; then
     fi
     new_tag=$(join . "${array[@]}")
 else
+    # FIRST RELEASE
     current_tag="(none)"
     new_tag="0.1.0"
 fi
@@ -181,7 +192,6 @@ fi
 #
 # GIT OPERATIONS
 #
-git checkout master;
 
 # append changelog message
 if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
@@ -207,11 +217,17 @@ if ${push_flag} == 'true'
 then git push origin master && git push origin ${new_tag};
 fi
 
-# resync local dev branch and remote dev branch
-git checkout dev && git rebase master;
-
-if ${push_flag} == 'true'
-then git push origin dev;
-fi
+echo "resync 'dev' branch?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes )
+            git checkout dev && git rebase master;
+            if ${push_flag} == 'true'
+            then git push origin dev;
+            fi;
+            break;;
+        No ) break;;
+    esac
+done
 
 echo -e "\nINFO. done!";
