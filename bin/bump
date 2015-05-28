@@ -122,8 +122,8 @@ if [ ! -z "$current_tag" ]; then
     then let array[2]=array[2]+1;
     else
         if [ "${release_type}" == "minor" ];
-        then let array[1]=array[1]+1;
-        else let array[0]=array[0]+1;
+        then let array[1]=array[1]+1; let array[2]="0";
+        else let array[0]=array[0]+1; let array[1]="0"; let array[2]="0";
         fi
     fi
     new_tag=$(join . "${array[@]}")
