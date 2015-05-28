@@ -1,3 +1,8 @@
+# 0.3.0 (2015-05-28)
+
+- eafaa61 adds fix, wrong new_tag [Ruben Barilani]
+
+
 # 0.2.0 (2015-05-28)
 
 - 4e89e57 don't push to remote option [Ruben Barilani]
