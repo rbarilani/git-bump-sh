@@ -1,3 +1,8 @@
+# 0.4.0 (2015-05-28)
+
+- 10edef6 permits release only on the master branch, optionally resync dev branch [Ruben Barilani]
+
+
 # 0.3.0 (2015-05-28)
 
 - eafaa61 adds fix, wrong new_tag [Ruben Barilani]
