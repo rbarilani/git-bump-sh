@@ -24,10 +24,11 @@ Adds this to your composer.json and run ```composer update truelab/git-bump-sh``
 ## Limitations, conventions and assumptions 
 
 * Follow semantic versioning
-* Tags are used only to mark a release
+* There are two branch called master and dev
+* Tags are only used to mark a release
 * A CHANGELOG.md markdown file is used to track changes
 * A yml file is used to set a version parameter
-* Run this command from the root of your project folder (where CHANGELOG.md resides)
+* You must run this command from the root of your project folder (where CHANGELOG.md resides)
 
 
 ## Usage
