@@ -40,8 +40,33 @@ test_bump_version_file() {
     assertEquals "$(bump_version_file "0.0.1" "${TMP_FOLDER}/version.yml")" "INFO. ${TMP_FOLDER}/version.yml was modified."
 }
 
+test_git_check_working_directory_clean_error() {
+    touch bump_tmp.txt
+    RESULT="$(git_check_working_directory_clean)"
+    assertTrue "must fail, i expect directory is dirty after a file creation" "[ $? = 1 ]"
+    rm bump_tmp.txt
+}
+
+# OVERRIDE GIT COMMAND
+test_git_check_working_directory_clean_error2() {
+    git() {
+        assertEquals "status" "${1}"
+        echo "not clean. something to commit"
+    }
+    RESULT="$(git_check_working_directory_clean)"
+    assertTrue "must fail" "[ $? = 1 ]"
+}
+
+test_git_check_working_directory_clean_success() {
+    git() {
+        assertEquals "status" "${1}"
+        echo "nothing to commit (working directory clean)"
+    }
+    RESULT="$(git_check_working_directory_clean)"
+    assertTrue "must not fail" "[ $? = 0 ]"
+}
+
 test_git_log_head() {
-    # monkey patch git
     git() {
         assertEquals "log" "${1}"
         assertEquals "HEAD" "${3}"
@@ -77,5 +102,14 @@ test_git_fetch_all() {
     assertEquals "INFO. git fetch completed." "${RESULT}";
 }
 
+test_git_add() {
+    local times=0;
+    git() {
+        assertEquals "add" "${1}"
+        times=$(expr ${times} + 1)
+    }
+    git_add "foo" "bar"
+    assertEquals 2 ${times}
+}
 
 . $(dirname $0)/../vendor/shunit2-2.0.3/src/shell/shunit2

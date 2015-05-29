@@ -2,7 +2,6 @@
 
 source $(dirname $0)/bump_functions.sh
 
-current_git_branch="$(git_current_branch)"
 push_flag='true'
 current_tag="";
 new_tag="0"
@@ -31,9 +30,10 @@ shift $(($OPTIND - 1))
 first_arg=$1
 
 # if current branch is not master abort
-if [ ! "$current_git_branch" = "master" ]; then
-    echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
-fi;
+git_check_current_branch_is_master
+
+# git check working directory is clean
+git_check_working_directory_clean
 
 # VERSION FILE ARGUMENT
 if [ ! -z "$first_arg" ];

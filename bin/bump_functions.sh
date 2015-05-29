@@ -86,8 +86,21 @@ git_resync_dev_branch() {
 git_add() {
     for var in "$@"
     do
-        echo "$var"
+      git add ${var}
     done
+}
+
+git_check_working_directory_clean() {
+    if ! git status | grep "nothing to commit (working directory clean)"
+    then echo_error "git working directory is not clean" true;  exit 1;
+    fi;
+}
+
+git_check_current_branch_is_master() {
+    local current_git_branch="$(git_current_branch)"
+    if [ ! "$current_git_branch" = "master" ]; then
+        echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
+    fi;
 }
 
 echo_confirmation() {
