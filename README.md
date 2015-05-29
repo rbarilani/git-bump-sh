@@ -3,6 +3,7 @@ truelab/git-bump-sh
 
 Simple shell script to bump a new version of a package with git.
 
+[![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg?branch=master)](https://travis-ci.org/hal9087/git-bump-sh)
 
 
 ## Install
