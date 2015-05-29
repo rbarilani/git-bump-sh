@@ -2,14 +2,6 @@
 
 source $(dirname $0)/bump_functions.sh
 
-# ---------------------------
-#
-#
-# RUN
-#
-#
-# ---------------------------
-
 current_git_branch="$(git_current_branch)"
 push_flag='true'
 current_tag="";
@@ -25,6 +17,7 @@ version_file_path_name="app/config/version.yml"
 # * -h : print this help
 # * -s : don't push to remote
 #
+# ----------------------------
 while getopts 'sh' flag; do
   case "${flag}" in
     h) echo_help; exit; break;;
@@ -42,30 +35,26 @@ if [ ! "$current_git_branch" = "master" ]; then
     echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
 fi;
 
-#
-#
 # VERSION FILE ARGUMENT
-#
-#
-
 if [ ! -z "$first_arg" ];
 then version_file_path_name="${first_arg}"
 fi
 
+
 #
+#
+# RUN
+#
+# ---
+
 # GIT FETCH ALL
-#
-if git fetch --all
-then echo_info "git fetch completed"
-else echo_error "" true; exit 1;
-fi
+git_fetch_all
 
-
+# GET CURRENT LAST RELEASE TAG
 current_tag=$(git_last_tag)
 if [ -z "$current_tag" ]; then
     echo_info "can't find current tag into origin/master, assume it's the first release"
 fi
-
 
 if [ ! -z "$current_tag" ]; then
     #
@@ -99,35 +88,17 @@ else
     new_tag="0.1.0"
 fi
 
+# IF NEW TAG ALREADY EXISTS, ABORT
 if [ $(git_tag_exists ${new_tag}) = true ];
 then echo_error "'${new_tag}' git tag already exists" true; exit 1;
 fi;
 
-#
-# CONFIRM INFORMATION (last and new git tags)
-#
-echo "
+# CONFIRM VERSIONS
+echo_confirmation ${current_tag} ${new_tag}
 
-INFO
-
-last release: '${current_tag}'
-next release: '${new_tag}'
-
-"
-
-echo "looks right?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) break;;
-        No ) echo_error "not confirmed" true; exit 1;;
-    esac
-done
-
-# WRITE CHAGELOG MESSAGE TO A TEMP FILE
-# EDIT CHANGELOG
+# BUILD MESSAGE PARTS
 new_date=$(date "+(%Y-%m-%d)")
 new_header="# ${new_tag} ${new_date}"
-
 if [ "${current_tag}" = "(none)" ]; then
     new_body="$(git_log false)"
 else
@@ -138,65 +109,39 @@ if [ -z "$new_body" ]; then
     echo_error "no changes since last version" true; exit 1;
 fi
 
-echo -e "${new_header}\n\n${new_body}\n\n" > .CHANGELOG.tmp.md;
 
-vi .CHANGELOG.md -c ":r .CHANGELOG.tmp.md"
-rm -f .CHANGELOG.tmp.md;
-
-if [ ! -f .CHANGELOG.md ]; then
-    echo_error "" true; exit 1;
-fi
-
+#
 #
 # IO / GIT OPERATIONS
 #
+#--------------------
+
+# WRITE CHAGELOG MESSAGE TO A TEMP FILE
+write_temp_changelog_md "${new_header}\n\n${new_body}\n\n"
+
+# WRITE VERSION FILE
 bump_version_file ${new_tag} ${version_file_path_name}
 
-# append changelog message
-if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
-then echo_info "CHANGELOG.md was modified"; rm -f .CHANGELOG.md;
-else echo_error "" true; exit 1;
-fi
+# APPEND NEW CHANGELOG MESSAGE TO CHANGELOG.MD
+update_changelog_md
 
-# add changelog, version file and commit
-git add CHANGELOG.md;
-git add ${version_file_path_name};
-git commit -m "
-${new_tag}
+# GIT ADD & COMMIT
+git_add CHANGELOG.md ${version_file_path_name}
+
+git_commit "${new_tag}
 
 ${new_header}
 
 ${new_body}
-";
+"
 
-# add a new tag
-git tag -a ${new_tag} -m "${new_tag}";
+# GIT ADD TAG
+git_add_tag ${new_tag}
 
-# push master and the new tag to remote
-if ${push_flag} == 'true'
-then
-    if git push origin master && git push origin ${new_tag};
-    then echo_info "master and ${new_tag} were pushed"
-    else echo_error "" true; exit 1;
-    fi
-fi
+# GIT PUSH MASTER AND TAG
+git_push ${new_tag} ${push_flag}
 
-# resync dev branch
-echo "resync 'dev' branch?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes )
-            git checkout dev && git rebase master;
-            if ${push_flag} == 'true'
-            then
-                if git push origin dev;
-                then echo_info "master and ${new_tag} were pushed"
-                else echo_error "can't push dev branch" true; exit 1;
-                fi;
-            fi;
-            break;;
-        No ) break;;
-    esac
-done
+# GIT "RESYNC" DEV BRANCH (REBASE AND PUSH)
+git_resync_dev_branch ${push_flag}
 
 echo -e "\nINFO. done!";
