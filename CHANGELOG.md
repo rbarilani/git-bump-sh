@@ -1,3 +1,11 @@
+# 0.5.0 (2015-05-29)
+
+- 99b0d4c Merge pull request #1 from hal9087/dev [Ruben Barilani]
+- 1ac8e8d fix getopts and arguments [Ruben Barilani]
+- 05bd735 removes unwanted exit [Ruben Barilani]
+- 7754801 adds version file [Ruben Barilani]
+
+
 # 0.4.1 (2015-05-28)
 
 - a85c997 check tag already exists [Ruben Barilani]
