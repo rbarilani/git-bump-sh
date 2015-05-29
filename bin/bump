@@ -82,8 +82,6 @@ function echo_info() {
 #
 # ---------------------------
 
-
-
 current_git_branch="$(git_current_branch)"
 push_flag='true'
 current_tag="";
@@ -103,7 +101,7 @@ while getopts 'sh' flag; do
   case "${flag}" in
     h) echo_help; exit; break;;
     s) push_flag='false' ;;
-    *) echo_error "Unexpected option" true; echo_help; exit; break;;
+    *) echo_error "Unexpected option" true; echo_help; exit 1; break;;
   esac
 done
 
@@ -113,7 +111,7 @@ first_arg=$1
 
 # if current branch is not master abort
 if [ ! "$current_git_branch" = "master" ]; then
-    echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit;
+    echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
 fi;
 
 #
@@ -174,7 +172,7 @@ else
 fi
 
 if [ $(git_tag_exists ${new_tag}) = true ];
-then echo_error "'${new_tag}' git tag already exists" true; exit;
+then echo_error "'${new_tag}' git tag already exists" true; exit 1;
 fi;
 
 #
@@ -193,7 +191,7 @@ echo "looks right?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) break;;
-        No ) echo_error "not confirmed" true; exit;;
+        No ) echo_error "not confirmed" true; exit 1;;
     esac
 done
 
@@ -249,21 +247,30 @@ ${new_header}
 ${new_body}
 ";
 
-# add tag
+# add a new tag
 git tag -a ${new_tag} -m "${new_tag}";
 
 # push master and the new tag to remote
 if ${push_flag} == 'true'
-then git push origin master && git push origin ${new_tag};
+then
+    if git push origin master && git push origin ${new_tag};
+    then echo_info "master and ${new_tag} were pushed"
+    else echo_error "" true; exit 1;
+    fi
 fi
 
+# resync dev branch
 echo "resync 'dev' branch?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes )
             git checkout dev && git rebase master;
             if ${push_flag} == 'true'
-            then git push origin dev;
+            then
+                if git push origin dev;
+                then echo_info "master and ${new_tag} were pushed"
+                else echo_error "can't push dev branch" true; exit 1;
+                fi;
             fi;
             break;;
         No ) break;;
