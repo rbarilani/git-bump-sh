@@ -3,10 +3,9 @@ truelab/git-bump-sh
 
 Simple shell script to bump a new version of a package with git.
 
-[![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg?branch=master)](https://travis-ci.org/hal9087/git-bump-sh)
-
-
 ## Install
+
+### Using composer
 
 Adds this to your composer.json and run ```composer update truelab/git-bump-sh```:
 
@@ -34,11 +33,11 @@ Adds this to your composer.json and run ```composer update truelab/git-bump-sh``
 
 ## Usage
 
-Assuming composer has installed the script in the path ```bin / bump``` .
+Assuming composer has installed the script at ```vendor/bin/bump``` .
 
 ```bash
 
-bin/bump [-sh] [version_file_path]
+vendor/bin/bump [-sh] [version_file_path]
 
 Arguments:
 
@@ -51,5 +50,22 @@ Options:
 
 ```
 
+## Development
+
+### Tests
+
+Install [shunit2]
+
+```
+cd vendor && { curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -; }
+```
+
+Run tests
+
+```
+bash test.sh
+```
+
+[shunit2]: https://code.google.com/p/shunit2/
 
 
