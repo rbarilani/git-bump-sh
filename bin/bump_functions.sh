@@ -155,7 +155,7 @@ bump_version_file() {
     if echo "parameters:
     version: ${version}" > ${path}
     then echo_info "${path} was modified"
-    else echo_error "" true; rollback; exit 1;
+    else rollback; echo_help; echo_error "" true; exit 1;
     fi
 }
 
@@ -178,6 +178,12 @@ update_changelog_md() {
 }
 
 rollback() {
+    echo_info "rollback"
+
+    if [ -f .CHANGELOG.tmp.md ]; then
+        rm .CHANGELOG.tmp.md
+    fi
+
     if [ -f .CHANGELOG.md ]; then
         rm .CHANGELOG.md
     fi
