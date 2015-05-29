@@ -1,3 +1,8 @@
+# 0.5.1 (2015-05-29)
+
+- b504de0 updates README [Ruben Barilani]
+
+
 # 0.5.0 (2015-05-29)
 
 - 99b0d4c Merge pull request #1 from hal9087/dev [Ruben Barilani]
