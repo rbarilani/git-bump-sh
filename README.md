@@ -26,6 +26,7 @@ Adds this to your composer.json and run ```composer update truelab/git-bump-sh``
 * Follow semantic versioning
 * Tags are used only to mark a release
 * A CHANGELOG.md markdown file is used to track changes
+* A yml file is used to set a version parameter
 * Run this command from the root of your project folder (where CHANGELOG.md resides)
 
 
@@ -35,7 +36,11 @@ Assuming composer has installed the script in the path ```bin / bump``` .
 
 ```bash
 
-bin/bump [-sh]
+bin/bump [-sh] [version_file_path]
+
+Arguments:
+
+* version_file_path : path to yml version file (default: app/config/version.yml)
 
 Options:
 
