@@ -42,7 +42,11 @@ function echo_help() {
     echo -e "
 Usage:
 
-bump [-sh]
+bump [-sh] [version_file_path]
+
+Arguments:
+
+* version_file_path : path to yml version file (default: app/config/version.yml)
 
 Options:
 
@@ -78,14 +82,17 @@ function echo_info() {
 #
 # ---------------------------
 
+
+
 current_git_branch="$(git_current_branch)"
 push_flag='true'
 current_tag="";
 new_tag="0"
 release_type=""
+version_file_path_name="app/config/version.yml"
 
 #
-# PARSE OPTIONS
+# PARSE OPTIONS AND ARGUMENTS
 #
 # options:
 #
@@ -100,12 +107,27 @@ while getopts 'sh' flag; do
   esac
 done
 
+# get arguments after or before getopt
+shift $(($OPTIND - 1))
+first_arg=$1
+
+# if current branch is not master abort
 if [ ! "$current_git_branch" = "master" ]; then
     echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit;
 fi;
 
 #
-# FETCH ALL
+#
+# VERSION FILE ARGUMENT
+#
+#
+
+if [ ! -z "$first_arg" ];
+then version_file_path_name="${first_arg}"
+fi
+
+#
+# GIT FETCH ALL
 #
 if git fetch --all
 then echo_info "git fetch completed"
@@ -175,7 +197,6 @@ select yn in "Yes" "No"; do
     esac
 done
 
-
 # WRITE CHAGELOG MESSAGE TO A TEMP FILE
 # EDIT CHANGELOG
 new_date=$(date "+(%Y-%m-%d)")
@@ -201,8 +222,15 @@ if [ ! -f .CHANGELOG.md ]; then
 fi
 
 #
-# GIT OPERATIONS
+# IO / GIT OPERATIONS
 #
+
+# bump version file
+if echo "parameters:
+    version: ${new_tag}" > ${version_file_path_name}
+then echo_info "${version_file_path_name} was modified"
+else echo_error "" true; exit 1;
+fi
 
 # append changelog message
 if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
@@ -210,8 +238,9 @@ then echo_info "CHANGELOG.md was modified"; rm -f .CHANGELOG.md;
 else echo_error "" true; exit 1;
 fi
 
-# add changelog and commit
+# add changelog, version file and commit
 git add CHANGELOG.md;
+git add ${version_file_path_name};
 git commit -m "
 ${new_tag}
 
