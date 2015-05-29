@@ -226,7 +226,6 @@ if echo "parameters:
 then echo_info "${version_file_path_name} was modified"
 else echo_error "" true; exit 1;
 fi
-exit;
 
 # append changelog message
 if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
