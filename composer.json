@@ -10,5 +10,5 @@
         }
     ],
     "require": {},
-    "bin": ["bin/bump"]
+    "bin": ["bin/bump", "bin/bump_functions.sh"]
 }
