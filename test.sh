@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./bin/bump_functions.sh
+
 __failure_counter=0
 __success_counter=0
 __total_counter=0

@@ -2,6 +2,8 @@
 
 source $(dirname $0)/bump_functions.sh
 
+RESULT="null"
+
 setUp() {
    RESULT="null"
 }
@@ -10,8 +12,16 @@ tearDown() {
    RESULT="null"
 }
 
-# "UNIT TESTS"
-# OVERRIDE GIT COMMAND
+
+test_git_check_working_directory_clean_error() {
+    touch bump_tmp.txt
+    RESULT="$(git_check_working_directory_clean)"
+    assertTrue "must fail, i expect directory is dirty after a file creation" "[ $? = 1 ]"
+    rm bump_tmp.txt
+}
+#
+## "UNIT TESTS"
+## OVERRIDE GIT COMMAND
 test_git_check_working_directory_clean_error2() {
     git() {
         assertEquals "status" "${1}"
