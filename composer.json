@@ -10,5 +10,10 @@
         }
     ],
     "require": {},
-    "bin": ["bin/bump", "bin/bump_functions.sh"]
+    "bin": ["bin/bump", "bin/bump_functions.sh"],
+    "scripts": {
+        "post-install-cmd": [
+            "cd vendor && { curl -L \"http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz\" | tar zx ; cd -; }"
+        ]
+    }
 }
