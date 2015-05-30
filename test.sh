@@ -1,15 +1,31 @@
 #!/usr/bin/env bash
 
-test_script="bin/bump_functions_test.sh"
+__failure_counter=0
 
-if bash ${test_script}
-then echo -e "\nEXECUTED.";
-else echo -e "\nFAILURE."; exit 1;
-fi;
+for filename in bin/*_test.sh; do
 
-success_rate="$(bash ${test_script} 2> /dev/null | grep -Po '(?<=success rate: ).*' )"
+    __success_rate="0%";
 
-if [ "$success_rate" == "100%" ];
-then echo -e "\nSUCCESS."; exit 0;
-else echo -e "\nFAILURE."; exit 1;
+    echo -e "\n#\n# EXECUTING: '${filename}'.\n#"
+    if bash ${filename}
+        then
+            echo -e "\nEXECUTED.";
+            __success_rate="$(bash ${filename} 2> /dev/null | grep -Po '(?<=success rate: ).*' )"
+
+            if [ "$__success_rate" == "100%" ];
+            then
+                echo -e "SUCCESS.";
+            else
+                __failure_counter=$(expr ${__failure_counter} + 1); echo -e "FAILURE.";
+            fi
+    else
+        __failure_counter=$(expr ${__failure_counter} + 1); echo -e "\nFAILURE.";
+    fi
+
+done
+
+if [ ! ${__failure_counter} = 0 ]; then
+    echo -e "\n(!)-(!) TEST SUITE FAIL (!)-(!)"; exit 1;
+else
+    echo -e "\n(*)-(*) TEST SUITE SUCCESS (*)-(*)"; exit 0;
 fi
