@@ -32,7 +32,7 @@ test_echo_info() {
 }
 
 test_bump_version_file_error_not_existent_path() {
-    RESULT="$(bump_version_file "0.0.1" "${TMP_FOLDER}/NOT_EXISTENT/version.yml")"
+    RESULT="$(bump_version_file "0.0.1" "${TMP_FOLDER}/NOT_EXISTENT/version.yml" 2> /dev/null)"
     assertTrue "must fail" "[ $? = 1 ]"
 }
 

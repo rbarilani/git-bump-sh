@@ -1,5 +1,5 @@
 {
-    "name": "truelab/git-bump-sh",
+    "name": "hal9087/git-bump-sh",
     "description": "Simple shell script to bump a new version of a package with git",
     "type": "bin",
     "license": "MIT",
@@ -14,6 +14,7 @@
     "scripts": {
         "post-install-cmd": [
             "cd vendor && { curl -L \"http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz\" | tar zx ; cd -; }"
-        ]
+        ],
+        "test": "bash test.sh"
     }
 }

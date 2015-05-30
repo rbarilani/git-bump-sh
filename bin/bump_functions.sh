@@ -10,99 +10,6 @@ join() {
     local IFS="$1"; shift; echo "$*";
 }
 
-git_last_tag() {
-    git describe origin/master
-}
-
-git_tag_exists() {
-
-    if git show-ref --tags | egrep -q "refs/tags/$1$"
-    then
-        echo true
-    else
-        echo false
-    fi
-}
-
-git_log() {
-
-    local format="format:- %h %s [%an]";
-
-    if [ "$1" = false ] ; then
-        git log --pretty="${format}" HEAD
-    else
-        git log --pretty="${format}" ${1}..HEAD
-    fi;
-}
-
-git_current_branch() {
-    git rev-parse --abbrev-ref HEAD
-}
-
-git_fetch_all() {
-    if git fetch --all
-    then echo_info "git fetch completed"
-    else echo_error "" true; exit 1;
-    fi
-}
-
-git_add_tag() {
-    git tag -a ${1} -m "${1}";
-}
-
-git_push() {
-    if ${2} == 'true'
-    then
-        if git push origin master && git push origin ${1};
-        then echo_info "master and ${1} were pushed"
-        else echo_error "" true; exit 1;
-        fi
-    fi
-}
-
-git_commit() {
-    git commit -m "${1}";
-}
-
-git_resync_dev_branch() {
-    echo "resync 'dev' branch?"
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes )
-                git checkout dev && git rebase master;
-                if ${1} == 'true'
-                then
-                    if git push origin dev;
-                    then echo_info "dev saw pushed"
-                    else echo_error "can't push dev branch" true; exit 1;
-                    fi;
-                fi;
-                break;;
-            No ) break;;
-        esac
-    done
-}
-
-git_add() {
-    for var in "$@"
-    do
-      git add ${var}
-    done
-}
-
-git_check_working_directory_clean() {
-    if [ -z "$(git status 2> /dev/null | grep "nothing to commit (working directory clean)")" ]
-    then echo_error "git working directory is not clean" true;  exit 1;
-    fi;
-}
-
-git_check_current_branch_is_master() {
-    local current_git_branch="$(git_current_branch)"
-    if [ ! "$current_git_branch" = "master" ]; then
-        echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
-    fi;
-}
-
 echo_confirmation() {
 
     #
@@ -200,4 +107,104 @@ rollback() {
     if [ -f .CHANGELOG.md ]; then
         rm .CHANGELOG.md
     fi
+}
+
+
+
+#
+#
+# GIT FUNCTIONS
+#
+#
+git_last_tag() {
+    git describe origin/master
+}
+
+git_tag_exists() {
+
+    if git show-ref --tags | egrep -q "refs/tags/$1$"
+    then
+        echo true
+    else
+        echo false
+    fi
+}
+
+git_log() {
+
+    local format="format:- %h %s [%an]";
+
+    if [ "$1" = false ] ; then
+        git log --pretty="${format}" HEAD
+    else
+        git log --pretty="${format}" ${1}..HEAD
+    fi;
+}
+
+git_current_branch() {
+    git rev-parse --abbrev-ref HEAD
+}
+
+git_fetch_all() {
+    if git fetch --all
+    then echo_info "git fetch completed"
+    else echo_error "" true; exit 1;
+    fi
+}
+
+git_add_tag() {
+    git tag -a ${1} -m "${1}";
+}
+
+git_push() {
+    if ${2} == 'true'
+    then
+        if git push origin master && git push origin ${1};
+        then echo_info "master and ${1} were pushed"
+        else echo_error "" true; exit 1;
+        fi
+    fi
+}
+
+git_commit() {
+    git commit -m "${1}";
+}
+
+git_resync_dev_branch() {
+    echo "resync 'dev' branch?"
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes )
+                git checkout dev && git rebase master;
+                if ${1} == 'true'
+                then
+                    if git push origin dev;
+                    then echo_info "dev saw pushed"
+                    else echo_error "can't push dev branch" true; exit 1;
+                    fi;
+                fi;
+                break;;
+            No ) break;;
+        esac
+    done
+}
+
+git_add() {
+    for var in "$@"
+    do
+      git add ${var}
+    done
+}
+
+git_check_working_directory_clean() {
+    if [ -z "$(git status 2> /dev/null | grep "nothing to commit (working directory clean)")" ]
+    then echo_error "git working directory is not clean" true;  exit 1;
+    fi;
+}
+
+git_check_current_branch_is_master() {
+    local current_git_branch="$(git_current_branch)"
+    if [ ! "$current_git_branch" = "master" ]; then
+        echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
+    fi;
 }

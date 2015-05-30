@@ -3,7 +3,15 @@ truelab/git-bump-sh
 
 Simple shell script to bump a new version of a package with git.
 
+[![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg)](https://travis-ci.org/hal9087/git-bump-sh)
+
 ## Install
+
+### Using git
+
+```
+git clone https://github.com/hal9087/git-bump-sh.git
+```
 
 ### Using composer
 
@@ -12,28 +20,17 @@ Adds this to your composer.json and run ```composer update truelab/git-bump-sh``
 ```json
 {
     "require": {
-        "truelab/git-bump-sh" : "dev-master"
+        "hal9087/git-bump-sh" : "dev-master"
     },
     "repositories" : [
-        { "type":"git", "url":"https://github.com/truelab/git-bump-sh.git" }
+        { "type":"git", "url":"https://github.com/hal9087/git-bump-sh.git" }
     ]
 }
 ```
 
-
-## Limitations, conventions and assumptions 
-
-* Follow semantic versioning
-* There are two branch called master and dev
-* Tags are only used to mark a release
-* A CHANGELOG.md markdown file is used to track changes
-* A yml file is used to set a version parameter
-* You must run this command from the root of your project folder (where CHANGELOG.md resides)
-
-
 ## Usage
 
-Assuming composer has installed the script at ```vendor/bin/bump``` .
+Assuming you or composer has installed the script at ```vendor/bin/bump``` .
 
 ```bash
 
@@ -54,13 +51,21 @@ Options:
 
 ### Tests
 
-Install [shunit2]
+#### Install shunit2
+
+Install [shunit2] manually 
 
 ```
 cd vendor && { curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -; }
 ```
 
-Run tests
+or with composer
+
+```
+composer install
+```
+
+#### Run tests
 
 ```
 bash test.sh
