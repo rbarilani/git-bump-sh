@@ -117,7 +117,8 @@ rollback() {
 #
 #
 git_last_tag() {
-    git describe --tags `git rev-list --tags --max-count=1`
+    local rev="$(git rev-list --tags --max-count=1 2> /dev/null)"
+    git describe --tags ${rev} 2> /dev/null
 }
 
 git_tag_exists() {
