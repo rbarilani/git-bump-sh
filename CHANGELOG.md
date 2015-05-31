@@ -1,3 +1,20 @@
+# 0.6.0 (2015-05-31)
+
+- 2b8a868 change version.yml indentation, add parse_yaml function, add minor updates [Ruben Barilani]
+- 03ec20d truelab to hal9087 plus updates [Ruben Barilani]
+- 0e65d63 post install shunit [Ruben Barilani]
+- b4f45d3 splits tests [Ruben Barilani]
+- b9e321e updates README [Ruben Barilani]
+- 45666ee adds travis badge [Ruben Barilani]
+- 4f19c2c redirecting output when git status [Ruben Barilani]
+- c05414d updates git_add, test git_add, adds check functions, adds tests [Ruben Barilani]
+- 89e5e9e updates rollback [Ruben Barilani]
+- a9ea675 adds rollback function [Ruben Barilani]
+- b258b41 adds more functions, adds more tests [Ruben Barilani]
+- 899c4a0 move functions in a separate file, adds tests and travis integration [Ruben Barilani]
+- 3bab9eb wip: check git commands before continue [Ruben Barilani]
+
+
 # 0.5.1 (2015-05-29)
 
 - b504de0 updates README [Ruben Barilani]
