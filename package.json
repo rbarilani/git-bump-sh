@@ -1,0 +1,28 @@
+{
+  "name": "hal9087-git-bump-sh",
+  "version": "0.6.1",
+  "description": "Simple shell script to bump a new version of a package with git.",
+  "main": "bin/bump",
+  "bin": { "bump" : "bin/bump", "bump_functions.sh" : "bin/bump_functions.sh" },
+  "scripts": {
+    "test": "bash test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hal9087/git-bump-sh.git"
+  },
+  "keywords": [
+    "Bash",
+    "Shell",
+    "Bump",
+    "Semver",
+    "CHANGELOG",
+    "git"
+  ],
+  "author": "Ruben Barilani <ruben.barilani.dev@gmail.com> (https://github.com/hal9087)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hal9087/git-bump-sh/issues"
+  },
+  "homepage": "https://github.com/hal9087/git-bump-sh"
+}
