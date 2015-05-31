@@ -1,3 +1,8 @@
+# 0.6.1 (2015-05-31)
+
+- 6a563f0 updates README.md [Ruben Barilani]
+
+
 # 0.6.0 (2015-05-31)
 
 - 2b8a868 change version.yml indentation, add parse_yaml function, add minor updates [Ruben Barilani]
