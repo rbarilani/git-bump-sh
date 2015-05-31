@@ -1,4 +1,4 @@
-truelab/git-bump-sh
+hal9087/git-bump-sh
 ==============================
 
 Simple shell script to bump a new version of a package with git.
@@ -59,7 +59,7 @@ Install [shunit2] manually
 cd vendor && { curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -; }
 ```
 
-or with composer
+or with the help of composer post install hook
 
 ```
 composer install
