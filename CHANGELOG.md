@@ -1,3 +1,8 @@
+# 0.7.1 (2015-06-01)
+
+- 1aa3fb8 fix a typo error [Ruben Barilani]
+
+
 # 0.7.0 (2015-06-01)
 
 - a5f4438 updates also package.json if present [Ruben Barilani]
