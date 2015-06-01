@@ -84,7 +84,7 @@ Options:
 Install [shunit2] manually 
 
 ```
-cd vendor && { curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -; }
+cd vendor && curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -;
 ```
 
 or with the help of composer post install hook
