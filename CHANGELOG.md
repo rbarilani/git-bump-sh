@@ -1,3 +1,10 @@
+# 0.6.2 (2015-06-01)
+
+- ce5e562 updates LICENSE, updates readme, adds README.md lost part [Ruben Barilani]
+- be30ab9 git last tag redirect error output [Ruben Barilani]
+- 477eb16 adds package.json [Ruben Barilani]
+
+
 # 0.6.1 (2015-05-31)
 
 - 6a563f0 updates README.md [Ruben Barilani]
