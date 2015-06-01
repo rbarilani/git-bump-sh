@@ -1,3 +1,9 @@
+# 0.7.0 (2015-06-01)
+
+- a5f4438 updates also package.json if present [Ruben Barilani]
+- 107aa87 updates and test git_add_tag function, long message also for the tag [Ruben Barilani]
+
+
 # 0.6.2 (2015-06-01)
 
 - ce5e562 updates LICENSE, updates readme, adds README.md lost part [Ruben Barilani]
