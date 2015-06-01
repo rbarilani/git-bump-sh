@@ -1,3 +1,9 @@
+# 0.7.2 (2015-06-01)
+
+- e5f668e hotfix [Ruben Barilani]
+- 6fda7bb updates README.md [Ruben Barilani]
+
+
 # 0.7.1 (2015-06-01)
 
 - 1aa3fb8 fix a typo error [Ruben Barilani]
