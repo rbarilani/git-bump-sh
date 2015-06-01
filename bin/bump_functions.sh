@@ -213,7 +213,7 @@ git_add() {
 }
 
 git_check_working_directory_clean() {
-    if [ -z "$(git status 2> /dev/null | grep "nothing to commit (working directory clean)")" ]
+    if [ -z "$(git status 2> /dev/null | grep "nothing to commit")" ]
     then echo_error "git working directory is not clean" true;  exit 1;
     fi;
 }
