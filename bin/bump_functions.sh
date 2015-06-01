@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 #
 #
 # FUNCTIONS
@@ -109,7 +110,21 @@ rollback() {
     fi
 }
 
+match_and_replace_version() {
+    echo "${1}" | sed 's/"version":[ \t]\{0,\}"[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}"/"version": "'${2}'"/'
+}
 
+is_npm_project() {
+    if [ -f package.json ];
+    then echo true
+    else echo false
+    fi
+}
+
+bump_npm_package_version() {
+   local updated="$(match_and_replace_version "$(cat package.json)" "${1}")"
+   echo -e "${updated}" > package.json
+}
 
 #
 #

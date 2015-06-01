@@ -128,11 +128,21 @@ write_temp_changelog_md "${new_header}\n\n${new_body}\n\n"
 # WRITE VERSION FILE
 bump_version_file ${new_tag} ${version_file_path_name}
 
+# UPDATE package.json
+if [ $(is_npm_project) = true ]; then
+    bump_npm_package_version ${new_tag}
+fi;
+
 # APPEND NEW CHANGELOG MESSAGE TO CHANGELOG.MD
 update_changelog_md
 
 # GIT ADD & COMMIT
 git_add CHANGELOG.md ${version_file_path_name}
+
+if [ $(is_npm_project) = true ]; then
+    git_add package.json
+fi;
+
 git_commit "${git_message}"
 
 # GIT ADD TAG
