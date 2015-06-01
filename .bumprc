@@ -1,0 +1,2 @@
+VERSION_FILE="version.yml"
+PRE_CMD="bash test.sh"

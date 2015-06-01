@@ -2,32 +2,57 @@
 
 source $(dirname $0)/bump_functions.sh
 
-push_flag='true'
-current_tag="";
-new_tag="0"
-release_type=""
-version_file_path_name="app/config/version.yml"
+CURRENT_TAG="";
+NEW_TAG="0"
+RELEASE_TYPE=""
+
+# DEFAULT OPTIONS
+VERSION_FILE="app/config/version.yml"
+SILENT=false
+NO_COLOR=false
+PRE_CMD=""
+AFTER_CMD=""
+
+# SOURCE .bumprc (OVERRIDE OPTIONS)
+if [ -f .bumprc ]; then
+    source .bumprc;
+fi;
 
 #
 # PARSE OPTIONS AND ARGUMENTS
 #
-# options:
-#
-# * -h : print this help
-# * -s : don't push to remote
-#
-# ----------------------------
-while getopts 'sh' flag; do
-  case "${flag}" in
-    h) echo_help; exit; break;;
-    s) push_flag='false' ;;
-    *) echo_error "Unexpected option" true; echo_help; exit 1; break;;
-  esac
+for i in "$@"
+do
+case $i in
+    -s|--silent)
+    SILENT=true
+    shift # past argument=value
+    ;;
+    --pre-cmd=*)
+    PRE_CMD="${i#*=}"
+    shift # past argument=value
+    ;;
+    --after-cmd=*)
+    AFTER_CMD="${i#*=}"
+    shift # past argument=value
+    ;;
+    --no-color)
+    NO_COLOR=true
+    shift # past argument=value
+    ;;
+    -h|--help)
+    echo_help; exit 1;
+    ;;
+    *)
+    if ! [[ ${i} =~ ^--* ]]; then
+     args+=(${i})
+    fi
+    ;;
+esac
 done
 
-# get arguments after or before getopt
-shift $(($OPTIND - 1))
-first_arg=$1
+# EXECUTE PRE-CMD
+execute_cmd "${PRE_CMD}" "pre-cmd"
 
 # if current branch is not master abort
 git_check_current_branch_is_master
@@ -36,10 +61,9 @@ git_check_current_branch_is_master
 git_check_working_directory_clean
 
 # VERSION FILE ARGUMENT
-if [ ! -z "$first_arg" ];
-then version_file_path_name="${first_arg}"
+if ! [ -z ${args[0]} ]
+then VERSION_FILE="${args[0]}"
 fi
-
 
 #
 #
@@ -51,61 +75,61 @@ fi
 git_fetch_all
 
 # GET CURRENT LAST RELEASE TAG
-current_tag=$(git_last_tag)
-if [ -z "$current_tag" ]; then
+CURRENT_TAG=$(git_last_tag)
+if [ -z "$CURRENT_TAG" ]; then
     echo_info "can't find current tag into origin/master, assume it's the first release"
 fi
 
-if [ ! -z "$current_tag" ]; then
+if [ ! -z "$CURRENT_TAG" ]; then
     #
     # CHOOSE TYPE OF RELEASE (fix, minor, major)
     #
     echo "it's a fix, a minor or a major release?"
     select release in "fix" "minor" "major"; do
         case $release in
-            fix ) release_type="fix"; break;;
-            minor ) release_type="minor"; break;;
-            major ) release_type="major"; break;;
+            fix ) RELEASE_TYPE="fix"; break;;
+            minor ) RELEASE_TYPE="minor"; break;;
+            major ) RELEASE_TYPE="major"; break;;
         esac
     done
 
     #
     # CALCULATE NEW RELEASE TAG
     #
-    IFS='. ' read -a array <<< "$current_tag"
-    if [ "${release_type}" == "fix" ];
+    IFS='. ' read -a array <<< "$CURRENT_TAG"
+    if [ "${RELEASE_TYPE}" == "fix" ];
     then let array[2]=array[2]+1;
     else
-        if [ "${release_type}" == "minor" ];
+        if [ "${RELEASE_TYPE}" == "minor" ];
         then let array[1]=array[1]+1; let array[2]="0";
         else let array[0]=array[0]+1; let array[1]="0"; let array[2]="0";
         fi
     fi
-    new_tag=$(join . "${array[@]}")
+    NEW_TAG=$(join . "${array[@]}")
 else
     # FIRST RELEASE
-    current_tag="(none)"
-    new_tag="0.1.0"
+    CURRENT_TAG="(none)"
+    NEW_TAG="0.1.0"
 fi
 
 # IF NEW TAG ALREADY EXISTS, ABORT
-if [ $(git_tag_exists ${new_tag}) = true ];
-then echo_error "'${new_tag}' git tag already exists" true; exit 1;
+if [ $(git_tag_exists ${NEW_TAG}) = true ];
+then echo_error "'${NEW_TAG}' git tag already exists" true; exit 1;
 fi;
 
 # CONFIRM VERSIONS
-echo_confirmation ${current_tag} ${new_tag}
+echo_confirmation ${CURRENT_TAG} ${NEW_TAG}
 
 # BUILD MESSAGE PARTS
-new_date=$(date "+(%Y-%m-%d)")
-new_header="# ${new_tag} ${new_date}"
-if [ "${current_tag}" = "(none)" ]; then
-    new_body="$(git_log false)"
+NEW_DATE=$(date "+(%Y-%m-%d)")
+NEW_HEADER="# ${NEW_TAG} ${NEW_DATE}"
+if [ "${CURRENT_TAG}" = "(none)" ]; then
+    NEW_BODY="$(git_log false)"
 else
-    new_body="$(git_log ${current_tag})"
+    NEW_BODY="$(git_log ${CURRENT_TAG})"
 fi
 
-if [ -z "$new_body" ]; then
+if [ -z "$NEW_BODY" ]; then
     echo_error "no changes since last version" true; exit 1;
 fi
 
@@ -115,43 +139,47 @@ fi
 # IO / GIT OPERATIONS
 #
 #--------------------
-git_message="${new_tag}
+GIT_MESSAGE="${NEW_TAG}
 
-${new_header}
+${NEW_HEADER}
 
-${new_body}
+${NEW_BODY}
 "
 
 # WRITE CHAGELOG MESSAGE TO A TEMP FILE
-write_temp_changelog_md "${new_header}\n\n${new_body}\n\n"
+write_temp_changelog_md "${NEW_HEADER}\n\n${NEW_BODY}\n\n"
 
 # WRITE VERSION FILE
-bump_version_file ${new_tag} ${version_file_path_name}
+bump_version_file ${NEW_TAG} ${VERSION_FILE}
 
 # UPDATE package.json
 if [ $(is_npm_project) = true ]; then
-    bump_npm_package_version ${new_tag}
+    bump_npm_package_version ${NEW_TAG}
 fi;
 
 # APPEND NEW CHANGELOG MESSAGE TO CHANGELOG.MD
 update_changelog_md
 
 # GIT ADD & COMMIT
-git_add CHANGELOG.md ${version_file_path_name}
+git_add CHANGELOG.md ${VERSION_FILE}
 
 if [ $(is_npm_project) = true ]; then
     git_add package.json
 fi;
 
-git_commit "${git_message}"
+git_commit "${GIT_MESSAGE}"
 
 # GIT ADD TAG
-git_add_tag ${new_tag} "${git_message}"
+git_add_tag ${NEW_TAG} "${GIT_MESSAGE}"
 
 # GIT PUSH MASTER AND TAG
-git_push ${new_tag} ${push_flag}
+git_push ${NEW_TAG} ${SILENT}
 
 # GIT "RESYNC" DEV BRANCH (REBASE AND PUSH)
-git_resync_dev_branch ${push_flag}
+git_resync_dev_branch ${SILENT}
 
-echo -e "\nINFO. done!";
+# EXECUTE AFTER COMMAND
+execute_cmd "${AFTER_CMD}" "after-cmd"
+
+echo ""
+echo_success "DONE!";

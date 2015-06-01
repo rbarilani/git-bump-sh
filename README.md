@@ -62,18 +62,48 @@ Assuming you, npm or composer has installed the script ```vendor/bin/bump```.
 
 ```bash
 
-vendor/bin/bump [-sh] [version_file_path]
+Usage:
+
+vendor/bin/bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--post-cmd=<command>] [--no-color]
 
 Arguments:
 
-* version_file_path : path to yml version file (default: app/config/version.yml)
+* version-file : path to yml version file (default: app/config/version.yml)
 
 Options:
 
-* -h : print this help
-* -s : don't push to remote
+* -h or --help          : print this help
+* -s or --silent        : don't push to remote
+* --pre-cmd=<command>   : execute <command> before bump
+* --after-cmd=<command> : execute <command> after successful bump
+* --no-color            : turn off colored messages
 
 ```
+
+### .bumprc
+
+To provide default options you can use a ```.bumprc``` file in your project root:
+
+```bash
+# .bumprc
+
+VERSION_FILE="version.yml"
+SILENT=true
+PRE_CMD="foo"
+AFTER_CMD="bar"
+NO_COLOR=true
+```
+
+```bash
+bump # -> bump version.yml -s --pre-cmd="foo" --after-cmd="bar" --no-color
+```
+
+you can always override those values with arguments
+
+```bash
+bump --pre-cmd="test" # -> bump version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
+```
+
 
 ## Development
 

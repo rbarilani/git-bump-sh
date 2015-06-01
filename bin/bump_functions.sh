@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Reset
+COLOR_OFF='\x1B[0m'       # Text Reset
+
+# Bold Colors
+BOLD_GREEN='\x1B[1;32m'   # Bold Green
+BOLD_RED='\x1B[1;31m'     # Bold Red
+BOLD_WHITE='\x1B[1;37m'   # Bold White
 
 #
 #
@@ -13,17 +20,12 @@ join() {
 
 echo_confirmation() {
 
-    #
-    # CONFIRM INFORMATION (last and new version)
-    #
-    echo "INFO
-
+    echo ""
+    echo_info "\n
 last release: '${1}'
 next release: '${2}'
-
 "
-
-    echo "looks right?"
+    echo "it seems right?"
     select yn in "Yes" "No"; do
         case $yn in
             Yes ) break;;
@@ -36,36 +38,58 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [-sh] [version_file_path]
+bump [-s|--silent] [--pre-cmd=<command>] [--post-cmd=<command>] [<version-file>]
 
 Arguments:
 
-* version_file_path : path to yml version file (default: app/config/version.yml)
+* version-file : path to yml version file (default: app/config/version.yml)
 
 Options:
 
-* -h : print this help
-* -s : don't push to remote
-
+* -h or --help          : print this help
+* -s or --silent        : don't push to remote
+* --pre-cmd=<command>   : execute <command> before bump
+* --after-cmd=<command> : execute <command> after successful bump
+* --no-color            : turn off colored messages
 "
 }
 
 echo_error() {
-    local error_message="ERROR.";
+    local error_message="(ERROR)";
 
     if [ ! -z "$1" ]; then
-        error_message=$(echo -e "${error_message} ${1}.")
+        error_message=$(echo -e "${error_message} ${1}")
     fi
 
     if [ "$2" = true ] ; then
-        error_message=$(echo -e "${error_message} aborting.")
+        error_message=$(echo -e "${error_message} ..aborting")
     fi
 
-    echo -e "${error_message}";
+    if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = false ]; then
+        echo -e "${BOLD_RED}${error_message}${COLOR_OFF}"
+    else
+        echo -e "${error_message}"
+    fi;
 }
 
 echo_info() {
-    echo -e "INFO. ${1}."
+    local message="(INFO) ${1}";
+
+    if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = false ]; then
+        echo -e "${BOLD_WHITE}${message}${COLOR_OFF}"
+    else
+        echo -e "${message}"
+    fi;
+}
+
+echo_success() {
+    local message="(SUCCESS) ${1}"
+
+    if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = true ]; then
+        echo -e "${BOLD_GREEN}{$message}${COLOR_OFF}"
+    else
+        echo -e "${message}"
+    fi;
 }
 
 bump_version_file() {
@@ -87,7 +111,7 @@ write_temp_changelog_md() {
     rm -f .CHANGELOG.tmp.md;
 
     if [ ! -f .CHANGELOG.md ]; then
-        echo_error "" true; exit 1;
+        echo_error "new changelog message doesn't exist" true; exit 1;
     fi
 }
 
@@ -124,6 +148,14 @@ is_npm_project() {
 bump_npm_package_version() {
    local updated="$(match_and_replace_version "$(cat package.json)" "${1}")"
    echo -e "${updated}" > package.json
+}
+
+execute_cmd(){
+    if ! [ -z "$1" ]
+    then
+        eval ${1}
+        [ $? = 1 ] && echo_error "${2}=\"${1}\" fails" true && exit 1;
+    fi
 }
 
 #
@@ -173,7 +205,7 @@ git_add_tag() {
 }
 
 git_push() {
-    if ${2} == 'true'
+    if [ "${2}" = false ]
     then
         if git push origin master && git push origin ${1};
         then echo_info "master and ${1} were pushed"
@@ -192,7 +224,7 @@ git_resync_dev_branch() {
         case $yn in
             Yes )
                 git checkout dev && git rebase master;
-                if ${1} == 'true'
+                if [ "${1}" = false ]
                 then
                     if git push origin dev;
                     then echo_info "dev was pushed"

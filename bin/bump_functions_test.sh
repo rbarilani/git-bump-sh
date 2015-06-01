@@ -23,13 +23,13 @@ tearDown() {
 }
 
 test_echo_error() {
-	assertEquals "ERROR. aborting." "$(echo_error "" true)"
-	assertEquals "ERROR. foobar. aborting." "$(echo_error "foobar" true)"
-	assertEquals "ERROR. foobar." "$(echo_error "foobar" false)"
+	assertEquals "(ERROR) ..aborting" "$(echo_error "" true)"
+	assertEquals "(ERROR) foobar ..aborting" "$(echo_error "foobar" true)"
+	assertEquals "(ERROR) foobar" "$(echo_error "foobar" false)"
 }
 
 test_echo_info() {
-    assertEquals "INFO. foo." "$(echo_info "foo")"
+    assertEquals "(INFO) foo" "$(echo_info "foo")"
 }
 
 test_bump_version_file_error_not_existent_path() {
@@ -38,7 +38,7 @@ test_bump_version_file_error_not_existent_path() {
 }
 
 test_bump_version_file() {
-    assertEquals "$(bump_version_file "0.0.1" "${TMP_FOLDER}/version.yml")" "INFO. ${TMP_FOLDER}/version.yml was modified."
+    assertEquals "$(bump_version_file "0.0.1" "${TMP_FOLDER}/version.yml")" "(INFO) ${TMP_FOLDER}/version.yml was modified"
 }
 
 test_match_and_replace_version() {

@@ -63,7 +63,7 @@ test_git_fetch_all_error() {
 
     RESULT="$(git_fetch_all)"
     assertTrue "must fail" "[ $? = 1 ]"
-    assertEquals "ERROR. aborting." "${RESULT}";
+    assertEquals "(ERROR) ..aborting" "${RESULT}";
 }
 
 test_git_fetch_all() {
@@ -73,7 +73,7 @@ test_git_fetch_all() {
 
     RESULT="$(git_fetch_all)"
     assertTrue "must not fail" "[ $? = 0 ]"
-    assertEquals "INFO. git fetch completed." "${RESULT}";
+    assertEquals "(INFO) git fetch completed" "${RESULT}";
 }
 
 test_git_add() {
