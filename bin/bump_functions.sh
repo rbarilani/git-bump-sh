@@ -195,7 +195,7 @@ git_resync_dev_branch() {
                 if ${1} == 'true'
                 then
                     if git push origin dev;
-                    then echo_info "dev saw pushed"
+                    then echo_info "dev was pushed"
                     else echo_error "can't push dev branch" true; exit 1;
                     fi;
                 fi;
