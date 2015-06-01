@@ -115,6 +115,12 @@ fi
 # IO / GIT OPERATIONS
 #
 #--------------------
+git_message="${new_tag}
+
+${new_header}
+
+${new_body}
+"
 
 # WRITE CHAGELOG MESSAGE TO A TEMP FILE
 write_temp_changelog_md "${new_header}\n\n${new_body}\n\n"
@@ -127,16 +133,10 @@ update_changelog_md
 
 # GIT ADD & COMMIT
 git_add CHANGELOG.md ${version_file_path_name}
-
-git_commit "${new_tag}
-
-${new_header}
-
-${new_body}
-"
+git_commit "${git_message}"
 
 # GIT ADD TAG
-git_add_tag ${new_tag}
+git_add_tag ${new_tag} "${git_message}"
 
 # GIT PUSH MASTER AND TAG
 git_push ${new_tag} ${push_flag}

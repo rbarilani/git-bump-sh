@@ -154,7 +154,7 @@ git_fetch_all() {
 }
 
 git_add_tag() {
-    git tag -a ${1} -m "${1}";
+    git tag -a ${1} -m "${2}";
 }
 
 git_push() {

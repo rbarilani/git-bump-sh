@@ -86,4 +86,15 @@ test_git_add() {
     assertEquals 2 ${times}
 }
 
+test_git_add_tag() {
+    git() {
+        assertEquals "tag" "${1}"
+        assertEquals "-a" "${2}"
+        assertEquals "0.1.0" "${3}"
+        assertEquals "-m" "${4}"
+        assertEquals "message" "${5}"
+    }
+    git_add_tag "0.1.0" "message"
+}
+
 . $(dirname $0)/../vendor/shunit2-2.0.3/src/shell/shunit2
