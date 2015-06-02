@@ -9,6 +9,7 @@ NO_COLOR=false
 PRE_CMD=""
 AFTER_CMD=""
 PRE_COMMIT_CMD=""
+FORCE=false
 
 # SOURCE CONFIGURATION FILE IF EXISTS
 CONFIGURATION_FILE=".bumprc"
@@ -45,6 +46,9 @@ case $i in
     PRE_COMMIT_CMD="${i#*=}"
     shift # past argument=value
     ;;
+    --force)
+    FORCE=true
+    ;;
     --no-color)
     NO_COLOR=true
     shift # past argument=value
@@ -66,11 +70,13 @@ done
 # EXECUTE PRE-CMD
 execute_cmd "${PRE_CMD}" "pre-cmd"
 
-# if current branch is not master abort
-# git_check_current_branch_is_master FIXME
+if [ ${FORCE} = false ]; then
+    # if current branch is not master abort
+    git_check_current_branch_is_master
 
-# git check working directory is clean
-git_check_working_directory_clean
+    # git check working directory is clean
+    git_check_working_directory_clean
+fi;
 
 # VERSION FILE ARGUMENT
 if ! [ -z ${args[0]} ]

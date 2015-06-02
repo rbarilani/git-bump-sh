@@ -58,14 +58,12 @@ This would install an executable script ```./node_modules/.bin/bump```.
 
 ## Usage
 
-Assuming you, npm or composer has installed the script ```vendor/bin/bump```.
-
 ```bash
 
 Usage:
 
-vendor/bin/bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
-     [--pre-commit-cmd=<command>][--version]
+bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
+     [--pre-commit-cmd=<command>] [--force] [--no-color] [--version]
 
 Arguments:
 
@@ -78,6 +76,7 @@ Options:
 * --pre-cmd=<command>        : execute <command> before bump
 * --after-cmd=<command>      : execute <command> after successful bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
+* --force                    : bypass checks
 * --no-color                 : turn off colored messages
 * --version                  : print bump command version
 
