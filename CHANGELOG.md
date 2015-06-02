@@ -1,3 +1,8 @@
+# 0.8.2 (2015-06-02)
+
+- ed644ea renaming variables [Ruben Barilani]
+
+
 # 0.8.1 (2015-06-02)
 
 - 8a8cb1e change VERSION_FILE default value [Ruben Barilani]
