@@ -57,6 +57,7 @@ Options:
 * --after-cmd=<command>      : execute <command> after successful bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --no-color                 : turn off colored messages
+* --version                  : print bump command version
 "
 }
 
@@ -96,6 +97,10 @@ echo_success() {
     else
         echo -e "${message}"
     fi;
+}
+
+echo_version() {
+    echo "${VERSION}"
 }
 
 bump_version_file() {

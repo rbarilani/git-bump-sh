@@ -49,8 +49,11 @@ case $i in
     NO_COLOR=true
     shift # past argument=value
     ;;
+    --version)
+    echo_version; exit 0;
+    ;;
     -h|--help)
-    echo_help; exit 1;
+    echo_help; exit 0;
     ;;
     *)
     if ! [[ ${i} =~ ^--* ]]; then

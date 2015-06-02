@@ -65,7 +65,7 @@ Assuming you, npm or composer has installed the script ```vendor/bin/bump```.
 Usage:
 
 vendor/bin/bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
-     [--pre-commit-cmd=<command>]
+     [--pre-commit-cmd=<command>][--version]
 
 Arguments:
 
@@ -79,6 +79,7 @@ Options:
 * --after-cmd=<command>      : execute <command> after successful bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --no-color                 : turn off colored messages
+* --version                  : print bump command version
 
 ```
 
