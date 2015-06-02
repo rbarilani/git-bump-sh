@@ -5,14 +5,13 @@ Simple shell script to bump a new version of a package with git.
 
 [![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg)](https://travis-ci.org/hal9087/git-bump-sh)
 
-## Limitations, conventions and assumptions 
+## Conventions, limitations and assumptions 
 
 * Follows semantic versioning
 * In your project there are two required main branches called master and dev
 * Tags are only used to mark a release
-* A CHANGELOG.md markdown file is used to track changes
-* A yml file is used to set a version parameter
-* You must run this command from the root of your project folder (where CHANGELOG.md resides)
+* a markdown file is used to track changes (CHANGELOG)
+* You must run this command from the root of your project folder (where CHANGELOG resides)
 
 ## Install
 
@@ -67,7 +66,7 @@ bump [<version-file>] [-s|--silent] [--force]
 
 Arguments:
 
-* version-file : path to yml version file (default: version.yml)
+* version-file : path to yml version file (default: version)
 
 Options:
 
@@ -88,21 +87,25 @@ To provide default options you can use a ```.bumprc``` file in your project root
 ```bash
 # .bumprc
 
-VERSION_FILE="app/config/version.yml"
+VERSION_FILE="config/version"
 SILENT=true
-PRE_CMD="foo"
-AFTER_CMD="bar"
+FORCE=true
+PRE_CMD="cmd1"
+PRE_COMMIT_CMD="cmd2"
+AFTER_CMD="cmd3"
 NO_COLOR=true
-```
-
-```bash
-bump # -> bump app/config/version.yml -s --pre-cmd="foo" --after-cmd="bar" --no-color
 ```
 
 you can always override those values with arguments
 
 ```bash
-bump --pre-cmd="test" # -> bump app/config/version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
+bump --pre-cmd="cmd4"
+```
+
+is like 
+
+```
+bump config/version -s --force --pre-cmd="cmd4" --pre-commit-cmd="cmd2" --after-cmd="cmd3" --no-color
 ```
 
 ### pre-cmd/pre-commit-cmd/after-cmd placeholders

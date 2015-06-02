@@ -3,7 +3,7 @@
 source $(dirname $0)/bump_functions.sh
 
 # DEFAULT OPTIONS
-VERSION_FILE="version.yml"
+VERSION_FILE="version"
 SILENT=false
 NO_COLOR=false
 PRE_CMD=""
