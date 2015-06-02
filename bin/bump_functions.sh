@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+VERSION="0.8.2"
+
+CHANGE_MESSAGE_FILE=".bump_changes"
+CHANGE_MESSAGE_FILE_TMP=".bump_changes.tmp"
+
 # Reset
 TEXT_RESET='\x1B[0m'
 
@@ -7,10 +12,6 @@ TEXT_RESET='\x1B[0m'
 BOLD_GREEN='\x1B[1;32m'
 BOLD_RED='\x1B[1;31m'
 BOLD_WHITE='\x1B[1;37m'
-
-CHANGE_MESSAGE_FILE=".bump_changes"
-CHANGE_MESSAGE_FILE_TMP=".bump_changes.tmp"
-
 #
 #
 # FUNCTIONS
@@ -41,19 +42,21 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [-s|--silent] [--pre-cmd=<command>] [--post-cmd=<command>] [<version-file>]
+bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
+     [--pre-commit-cmd=<command>]
 
 Arguments:
 
-* version-file : path to yml version file (default: app/config/version.yml)
+* version-file : path to yml version file (default: version.yml)
 
 Options:
 
-* -h or --help          : print this help
-* -s or --silent        : don't push to remote
-* --pre-cmd=<command>   : execute <command> before bump
-* --after-cmd=<command> : execute <command> after successful bump
-* --no-color            : turn off colored messages
+* -h or --help               : print this help
+* -s or --silent             : don't push to remote
+* --pre-cmd=<command>        : execute <command> before bump
+* --after-cmd=<command>      : execute <command> after successful bump
+* --pre-commit-cmd=<command> : execute <command> before git commit
+* --no-color                 : turn off colored messages
 "
 }
 
@@ -153,10 +156,15 @@ bump_npm_package_version() {
    echo -e "${updated}" > "${2}"
 }
 
+replace_cmd_placeholders() {
+    echo "${1}" | sed 's/{{CURRENT_TAG}}/'${CURRENT_TAG}'/g' |  sed 's/{{NEW_TAG}}/'${NEW_TAG}'/g' | sed 's/{{RELEASE_TYPE}}/'${RELEASE_TYPE}'/g'
+}
+
 execute_cmd(){
     if ! [ -z "$1" ]
     then
-        eval ${1}
+        local cmd=$(replace_cmd_placeholders "${1}")
+        eval "${cmd}";
         [ $? = 1 ] && echo_error "${2}=\"${1}\" fails" true && exit 1;
     fi
 }

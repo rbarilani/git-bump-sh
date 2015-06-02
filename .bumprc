@@ -1,1 +1,2 @@
 PRE_CMD="bash test.sh"
+PRE_COMMIT_CMD="cat bin/bump_functions.sh | sed 's/VERSION=\"[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}\"/VERSION=\"{{NEW_TAG}}\"/' > bin/bump_functions.tmp.sh && mv bin/bump_functions.tmp.sh bin/bump_functions.sh && git add bin/bump_functions.sh"

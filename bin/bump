@@ -2,24 +2,26 @@
 
 source $(dirname $0)/bump_functions.sh
 
-CURRENT_TAG="";
-NEW_TAG="0"
-RELEASE_TYPE=""
-CONFIGURATION_FILE=".bumprc"
-CHANGES_FILE="CHANGELOG.md"
-NPM_FILE="package.json"
-
 # DEFAULT OPTIONS
 VERSION_FILE="version.yml"
 SILENT=false
 NO_COLOR=false
 PRE_CMD=""
 AFTER_CMD=""
+PRE_COMMIT_CMD=""
 
 # SOURCE CONFIGURATION FILE IF EXISTS
+CONFIGURATION_FILE=".bumprc"
 if [ -f ${CONFIGURATION_FILE} ]; then
     source ${CONFIGURATION_FILE};
 fi;
+
+CHANGES_FILE="CHANGELOG.md"
+NPM_FILE="package.json"
+
+CURRENT_TAG="";
+NEW_TAG="0"
+RELEASE_TYPE=""
 
 #
 # PARSE OPTIONS AND ARGUMENTS
@@ -37,6 +39,10 @@ case $i in
     ;;
     --after-cmd=*)
     AFTER_CMD="${i#*=}"
+    shift # past argument=value
+    ;;
+    --pre-commit-cmd=*)
+    PRE_COMMIT_CMD="${i#*=}"
     shift # past argument=value
     ;;
     --no-color)
@@ -58,7 +64,7 @@ done
 execute_cmd "${PRE_CMD}" "pre-cmd"
 
 # if current branch is not master abort
-git_check_current_branch_is_master
+# git_check_current_branch_is_master FIXME
 
 # git check working directory is clean
 git_check_working_directory_clean
@@ -132,6 +138,7 @@ else
     NEW_BODY="$(git_log ${CURRENT_TAG})"
 fi
 
+
 if [ -z "$NEW_BODY" ]; then
     echo_error "no changes since last version" true; exit 1;
 fi
@@ -162,6 +169,9 @@ fi;
 
 # APPEND NEW MESSAGE TO CHANGES FILE
 update_changes ${CHANGES_FILE}
+
+# EXECUTE PRE COMMIT CMD
+execute_cmd "${PRE_COMMIT_CMD}" "pre-commit-cmd"
 
 # GIT ADD & COMMIT
 git_add ${CHANGES_FILE} ${VERSION_FILE}
