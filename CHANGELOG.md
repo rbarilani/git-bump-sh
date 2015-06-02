@@ -1,3 +1,8 @@
+# 0.8.0 (2015-06-02)
+
+- 473a743 refactor options and the options/arguments parsing method, adds --pre-cmd, --after-cmd, --no-color options, change message format, colorize output,  adds minor updates, adds .bumprc source feature, updates README.md [Ruben Barilani]
+
+
 # 0.7.2 (2015-06-01)
 
 - e5f668e hotfix [Ruben Barilani]
