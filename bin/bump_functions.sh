@@ -42,8 +42,9 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
-     [--pre-commit-cmd=<command>] [--force] [--no-color] [--version]
+bump [<version-file>] [-s|--silent] [--force]
+     [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
+     [--no-color] [-h|--help] [--version]
 
 Arguments:
 
@@ -51,14 +52,14 @@ Arguments:
 
 Options:
 
-* -h or --help               : print this help
 * -s or --silent             : don't push to remote
-* --pre-cmd=<command>        : execute <command> before bump
-* --after-cmd=<command>      : execute <command> after successful bump
-* --pre-commit-cmd=<command> : execute <command> before git commit
 * --force                    : bypass checks
+* --pre-cmd=<command>        : execute <command> before bump
+* --pre-commit-cmd=<command> : execute <command> before git commit
+* --after-cmd=<command>      : execute <command> after successful bump
 * --no-color                 : turn off colored messages
-* --version                  : print bump command version
+* -h or --help               : print this help
+* --version                  : print version
 "
 }
 

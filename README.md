@@ -58,12 +58,12 @@ This would install an executable script ```./node_modules/.bin/bump```.
 
 ## Usage
 
-```bash
-
+```
 Usage:
 
-bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--after-cmd=<command>]
-     [--pre-commit-cmd=<command>] [--force] [--no-color] [--version]
+bump [<version-file>] [-s|--silent] [--force]
+     [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
+     [--no-color] [-h|--help] [--version]
 
 Arguments:
 
@@ -71,15 +71,14 @@ Arguments:
 
 Options:
 
-* -h or --help               : print this help
 * -s or --silent             : don't push to remote
-* --pre-cmd=<command>        : execute <command> before bump
-* --after-cmd=<command>      : execute <command> after successful bump
-* --pre-commit-cmd=<command> : execute <command> before git commit
 * --force                    : bypass checks
+* --pre-cmd=<command>        : execute <command> before bump
+* --pre-commit-cmd=<command> : execute <command> before git commit
+* --after-cmd=<command>      : execute <command> after successful bump
 * --no-color                 : turn off colored messages
-* --version                  : print bump command version
-
+* -h or --help               : print this help
+* --version                  : print version
 ```
 
 ### .bumprc
@@ -106,15 +105,15 @@ you can always override those values with arguments
 bump --pre-cmd="test" # -> bump app/config/version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
 ```
 
-### --pre-cmd/--after-cmd/pre-commit-cmd placeholders
+### pre-cmd/pre-commit-cmd/after-cmd placeholders
 
-```bash
+```
 * {{RELEASE TYPE}}  # chosen release type (fix, major, minor)
 * {{CURRENT_TAG}}   # current version
 * {{NEW_TAG}}       # new bumped version
 ```
 
-You can use those placeholders in yours ```--pre-cmd/--after-cmd/pre-commit-cmd``` commands hooks.
+You can use those placeholders in yours ```--pre-cmd/--pre-commit-cmd/--after-cmd``` commands hooks.
 Take in mind that those values will be replaced before your command will be evaluated; for a live example take a look
 to the ```.bumprc``` file in this project.
 
