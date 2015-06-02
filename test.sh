@@ -1,43 +1,41 @@
 #!/usr/bin/env bash
 
-source ./bin/bump_functions.sh
-
-__failure_counter=0
-__success_counter=0
-__total_counter=0
+FAILURE_COUNTER=0
+SUCCESS_COUNTER=0
+TOTAL_COUNTER=0
 
 # Reset
-Color_Off='\x1B[0m'       # Text Reset
+TEXT_RESET='\x1B[0m'
 
 # Bold Colors
-Bold_Green='\x1B[1;32m'   # Bold Green
-Bold_Red='\x1B[1;31m'     # Bold Red
-Bold_White='\x1B[1;37m'   # Bold White
+BOLD_GREEN='\x1B[1;32m'
+BOLD_RED='\x1B[1;31m'
+BOLD_WHITE='\x1B[1;37m'
 
 for filename in bin/*_test.sh; do
 
-    __success_rate="0%";
-    __total_counter=$(expr ${__total_counter} + 1);
+    SUCCESS_RATE="0%";
+    TOTAL_COUNTER=$(expr ${TOTAL_COUNTER} + 1);
 
-    echo -e "${Bold_White}\n#\n#\n# EXECUTING: '${filename}'.\n#\n#\n${Color_Off}"
+    echo -e "${BOLD_WHITE}\n#\n#\n# EXECUTING: '${filename}'.\n#\n#\n${TEXT_RESET}"
     if bash ${filename}
         then
-            __success_rate="$(bash ${filename} 2> /dev/null | grep -Po '(?<=success rate: ).*' )"
-            if [ "$__success_rate" == "100%" ];
+            SUCCESS_RATE="$(bash ${filename} 2> /dev/null | grep -Po '(?<=success rate: ).*' )"
+            if [ "$SUCCESS_RATE" == "100%" ];
             then
-                __success_counter=$(expr ${__success_counter} + 1);
-                echo -e "${Bold_Green}\nSUCCESS.${Color_Off}";
+                SUCCESS_COUNTER=$(expr ${SUCCESS_COUNTER} + 1);
+                echo -e "${BOLD_GREEN}\nSUCCESS.${TEXT_RESET}";
             else
-                __failure_counter=$(expr ${__failure_counter} + 1); echo -e "${Bold_Red}\nFAILURE.${Color_Off}";
+                FAILURE_COUNTER=$(expr ${FAILURE_COUNTER} + 1); echo -e "${BOLD_RED}\nFAILURE.${TEXT_RESET}";
             fi
     else
-        __failure_counter=$(expr ${__failure_counter} + 1); echo -e "${Bold_Red}\nFAILURE WHILE EXECUTING.${Color_Off}";
+        FAILURE_COUNTER=$(expr ${FAILURE_COUNTER} + 1); echo -e "${BOLD_RED}\nFAILURE WHILE EXECUTING.${TEXT_RESET}";
     fi
 
 done
 
-if [ ! ${__failure_counter} = 0 ]; then
-    echo -e "${Bold_Red}\nTEST SUITE FAIL. ${__failure_counter}/${__total_counter}${Color_Off}"; exit 1;
+if [ ! ${FAILURE_COUNTER} = 0 ]; then
+    echo -e "${BOLD_RED}\nTEST SUITE FAIL. ${FAILURE_COUNTER}/${TOTAL_COUNTER}${TEXT_RESET}"; exit 1;
 else
-    echo -e "${Bold_Green}\nTEST SUITE SUCCESS. ${__success_counter}/${__total_counter}${Color_Off}"; exit 0;
+    echo -e "${BOLD_GREEN}\nTEST SUITE SUCCESS. ${SUCCESS_COUNTER}/${TOTAL_COUNTER}${TEXT_RESET}"; exit 0;
 fi

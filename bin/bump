@@ -5,6 +5,9 @@ source $(dirname $0)/bump_functions.sh
 CURRENT_TAG="";
 NEW_TAG="0"
 RELEASE_TYPE=""
+CONFIGURATION_FILE=".bumprc"
+CHANGES_FILE="CHANGELOG.md"
+NPM_FILE="package.json"
 
 # DEFAULT OPTIONS
 VERSION_FILE="version.yml"
@@ -13,9 +16,9 @@ NO_COLOR=false
 PRE_CMD=""
 AFTER_CMD=""
 
-# SOURCE .bumprc (OVERRIDE OPTIONS)
-if [ -f .bumprc ]; then
-    source .bumprc;
+# SOURCE CONFIGURATION FILE IF EXISTS
+if [ -f ${CONFIGURATION_FILE} ]; then
+    source ${CONFIGURATION_FILE};
 fi;
 
 #
@@ -154,17 +157,17 @@ bump_version_file ${NEW_TAG} ${VERSION_FILE}
 
 # UPDATE package.json
 if [ $(is_npm_project) = true ]; then
-    bump_npm_package_version ${NEW_TAG}
+    bump_npm_package_version ${NEW_TAG} ${NPM_FILE}
 fi;
 
-# APPEND NEW CHANGELOG MESSAGE TO CHANGELOG.MD
-update_changelog_md
+# APPEND NEW MESSAGE TO CHANGES FILE
+update_changes ${CHANGES_FILE}
 
 # GIT ADD & COMMIT
-git_add CHANGELOG.md ${VERSION_FILE}
+git_add ${CHANGES_FILE} ${VERSION_FILE}
 
 if [ $(is_npm_project) = true ]; then
-    git_add package.json
+    git_add ${NPM_FILE}
 fi;
 
 git_commit "${GIT_MESSAGE}"

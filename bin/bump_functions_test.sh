@@ -81,7 +81,7 @@ test_bump_npm_package_version() {
     \"foo\" : [\"version: 0.6.1\"]
 }" >> package.json
 
-    bump_npm_package_version ${new_tag}
+    bump_npm_package_version ${new_tag} package.json
 
     assertEquals "{
     \"name\": \"hal9087-git-bump-sh\",

@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
 # Reset
-COLOR_OFF='\x1B[0m'       # Text Reset
+TEXT_RESET='\x1B[0m'
 
 # Bold Colors
-BOLD_GREEN='\x1B[1;32m'   # Bold Green
-BOLD_RED='\x1B[1;31m'     # Bold Red
-BOLD_WHITE='\x1B[1;37m'   # Bold White
+BOLD_GREEN='\x1B[1;32m'
+BOLD_RED='\x1B[1;31m'
+BOLD_WHITE='\x1B[1;37m'
+
+CHANGE_MESSAGE_FILE=".bump_changes"
+CHANGE_MESSAGE_FILE_TMP=".bump_changes.tmp"
 
 #
 #
@@ -66,7 +69,7 @@ echo_error() {
     fi
 
     if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = false ]; then
-        echo -e "${BOLD_RED}${error_message}${COLOR_OFF}"
+        echo -e "${BOLD_RED}${error_message}${TEXT_RESET}"
     else
         echo -e "${error_message}"
     fi;
@@ -76,7 +79,7 @@ echo_info() {
     local message="(INFO) ${1}";
 
     if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = false ]; then
-        echo -e "${BOLD_WHITE}${message}${COLOR_OFF}"
+        echo -e "${BOLD_WHITE}${message}${TEXT_RESET}"
     else
         echo -e "${message}"
     fi;
@@ -86,7 +89,7 @@ echo_success() {
     local message="(SUCCESS) ${1}"
 
     if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = true ]; then
-        echo -e "${BOLD_GREEN}{$message}${COLOR_OFF}"
+        echo -e "${BOLD_GREEN}{$message}${TEXT_RESET}"
     else
         echo -e "${message}"
     fi;
@@ -105,19 +108,19 @@ bump_version_file() {
 }
 
 write_temp_changelog_md() {
-    echo -e "${1}" > .CHANGELOG.tmp.md;
+    echo -e "${1}" > "${CHANGE_MESSAGE_FILE_TMP}";
 
-    vi .CHANGELOG.md -c ":r .CHANGELOG.tmp.md"
-    rm -f .CHANGELOG.tmp.md;
+    vi ${CHANGE_MESSAGE_FILE} -c ":r ${CHANGE_MESSAGE_FILE_TMP}"
+    rm -f ${CHANGE_MESSAGE_FILE_TMP};
 
-    if [ ! -f .CHANGELOG.md ]; then
+    if [ ! -f ${CHANGE_MESSAGE_FILE} ]; then
         echo_error "new changelog message doesn't exist" true; exit 1;
     fi
 }
 
-update_changelog_md() {
-    if echo -e "$(cat .CHANGELOG.md)\n\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
-    then echo_info "CHANGELOG.md was modified"; rm -f .CHANGELOG.md;
+update_changes() {
+    if echo -e "$(cat ${CHANGE_MESSAGE_FILE})\n\n\n$(cat ${1})" > "${1}"
+    then echo_info "${1} was modified"; rm -f ${CHANGE_MESSAGE_FILE};
     else echo_error "" true; exit 1;
     fi
 }
@@ -125,12 +128,12 @@ update_changelog_md() {
 rollback() {
     echo_info "rollback"
 
-    if [ -f .CHANGELOG.tmp.md ]; then
-        rm .CHANGELOG.tmp.md
+    if [ -f ${CHANGE_MESSAGE_FILE_TMP} ]; then
+        rm ${CHANGE_MESSAGE_FILE_TMP}
     fi
 
-    if [ -f .CHANGELOG.md ]; then
-        rm .CHANGELOG.md
+    if [ -f ${CHANGE_MESSAGE_FILE} ]; then
+        rm ${CHANGE_MESSAGE_FILE}
     fi
 }
 
@@ -147,7 +150,7 @@ is_npm_project() {
 
 bump_npm_package_version() {
    local updated="$(match_and_replace_version "$(cat package.json)" "${1}")"
-   echo -e "${updated}" > package.json
+   echo -e "${updated}" > "${2}"
 }
 
 execute_cmd(){
