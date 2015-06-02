@@ -61,8 +61,10 @@ case $i in
     ;;
     *)
     if ! [[ ${i} =~ ^--* ]]; then
-     args+=(${i})
-    fi
+        args+=(${i})
+    else
+        echo_help; echo_error "Unknown option '${i}'" true; exit 1;
+    fi;
     ;;
 esac
 done
