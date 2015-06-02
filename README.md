@@ -106,6 +106,17 @@ you can always override those values with arguments
 bump --pre-cmd="test" # -> bump app/config/version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
 ```
 
+### --pre-cmd/--after-cmd/pre-commit-cmd placeholders
+
+```bash
+* {{RELEASE TYPE}}  # chosen release type (fix, major, minor)
+* {{CURRENT_TAG}}   # current version
+* {{NEW_TAG}}       # new bumped version
+```
+
+You can use those placeholders in yours ```--pre-cmd/--after-cmd/pre-commit-cmd``` commands hooks.
+Take in mind that those values will be replaced before your command will be evaluated; for a live example take a look
+to the ```.bumprc``` file in this project.
 
 ## Development
 
