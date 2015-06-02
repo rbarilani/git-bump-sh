@@ -7,7 +7,7 @@ NEW_TAG="0"
 RELEASE_TYPE=""
 
 # DEFAULT OPTIONS
-VERSION_FILE="app/config/version.yml"
+VERSION_FILE="version.yml"
 SILENT=false
 NO_COLOR=false
 PRE_CMD=""

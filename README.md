@@ -68,7 +68,7 @@ vendor/bin/bump [<version-file>] [-s|--silent] [--pre-cmd=<command>] [--post-cmd
 
 Arguments:
 
-* version-file : path to yml version file (default: app/config/version.yml)
+* version-file : path to yml version file (default: version.yml)
 
 Options:
 
@@ -87,7 +87,7 @@ To provide default options you can use a ```.bumprc``` file in your project root
 ```bash
 # .bumprc
 
-VERSION_FILE="version.yml"
+VERSION_FILE="app/config/version.yml"
 SILENT=true
 PRE_CMD="foo"
 AFTER_CMD="bar"
@@ -95,13 +95,13 @@ NO_COLOR=true
 ```
 
 ```bash
-bump # -> bump version.yml -s --pre-cmd="foo" --after-cmd="bar" --no-color
+bump # -> bump app/config/version.yml -s --pre-cmd="foo" --after-cmd="bar" --no-color
 ```
 
 you can always override those values with arguments
 
 ```bash
-bump --pre-cmd="test" # -> bump version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
+bump --pre-cmd="test" # -> bump app/config/version.yml -s --pre-cmd="test" --after-cmd="bar" --no-color
 ```
 
 
