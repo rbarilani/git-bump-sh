@@ -65,7 +65,7 @@ bump [<version-file>] [--release-type=<type>] [--changes-file=<path>] [-s|--sile
 
 Arguments:
 
-* version-file : path to yml version file (default: version.yml)
+* version-file : path to version file (default: version)
 
 Options:
 
