@@ -1,3 +1,8 @@
+# 1.1.2 (2015-06-03)
+
+- 5b2132f adds bump functional test, fix echo_success with --no-color [Ruben Barilani]
+
+
 # 1.1.1 (2015-06-03)
 
 - a3dc6aa updates composer.json description [Ruben Barilani]
