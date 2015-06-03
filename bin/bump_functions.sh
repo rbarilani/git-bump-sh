@@ -42,7 +42,8 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [<version-file>] [--release-type=<type>] [--changes-file=<path>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [--changes-file=<path>]
+     [-s|--silent] [--force] [--sync-dev=<flag>]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
      [--no-interactive] [--no-color] [-h|--help] [--version]
 
@@ -56,6 +57,7 @@ Options:
 * --changes-file=<path>      : use <path> to prepend change message (default: CHANGELOG.md)
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
+* --sync-dev=<flag>          : rebasing master progress into dev after success (default:"", possible are: true|false|""), required when --no-interactive
 * --pre-cmd=<command>        : execute <command> before bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --after-cmd=<command>      : execute <command> after successful bump
@@ -235,10 +237,10 @@ git_add_tag() {
 }
 
 git_push() {
-    if [ "${2}" = false ]
+    if [ "${3}" = false ]
     then
-        if git push origin master && git push origin ${1};
-        then echo_info "master and ${1} were pushed"
+        if git push origin ${1} && git push origin ${2};
+        then echo_info "${1} and ${2} were pushed"
         else echo_error "" true; exit 1;
         fi
     fi
@@ -248,23 +250,55 @@ git_commit() {
     git commit -m "${1}";
 }
 
+git_rebase_and_push_dev_branch() {
+    local dev_branch=$1
+    local master_branch=$2
+    local silent=$3;
+
+    git checkout ${dev_branch} && git rebase ${master_branch};
+    if [ "${silent}" = false ]
+    then
+        if git push origin ${1};
+        then echo_info "'${dev_branch}' was pushed"
+        else echo_error "can't push '${dev_branch}' branch" true; exit 1;
+        fi;
+    fi;
+}
+
 git_resync_dev_branch() {
-    echo "resync 'dev' branch?"
-    select yn in "Yes" "No"; do
-        case $yn in
-            Yes )
-                git checkout dev && git rebase master;
-                if [ "${1}" = false ]
-                then
-                    if git push origin dev;
-                    then echo_info "dev was pushed"
-                    else echo_error "can't push dev branch" true; exit 1;
-                    fi;
-                fi;
-                break;;
-            No ) break;;
-        esac
-    done
+
+    local dev_branch=$1
+    local master_branch=$2
+    local silent=$3;
+    local no_interactive=$4
+    local sync_dev=$5;
+
+    if [ ${no_interactive} = false ]; then # interactive
+
+        if [ -z "${sync_dev}" ]; then
+            echo "resync '${dev_branch}' branch?"
+            select yn in "Yes" "No"; do
+                case $yn in
+                    Yes )
+                        git_rebase_and_push_dev_branch ${dev_branch} ${master_branch} ${silent}
+                        break;;
+                    No ) echo_info "resync '${dev_branch}' branch not confirmed. continue.";
+                        break;;
+                esac
+            done
+        else
+            if [ "${sync_dev}" = true ]; then
+                echo_info "resync '${dev_branch}' branch"
+                git_rebase_and_push_dev_branch ${dev_branch} ${master_branch} ${silent}
+            fi;
+        fi
+
+    else # not interactive
+        if [ "${sync_dev}" = true ]; then
+            echo_info "resync '${dev_branch}' branch"
+            git_rebase_and_push_dev_branch ${dev_branch} ${master_branch} ${silent}
+        fi;
+    fi;
 }
 
 git_add() {
@@ -282,7 +316,7 @@ git_check_working_directory_clean() {
 
 git_check_current_branch_is_master() {
     local current_git_branch="$(git_current_branch)"
-    if [ ! "$current_git_branch" = "master" ]; then
-        echo_error "You are not on 'master' branch. Be sure to move to 'master' branch and merge your progress" true; exit 1;
+    if [ ! "$current_git_branch" = "${1}" ]; then
+        echo_error "You are not on '${1}' branch. Be sure to move to '${1}' branch and merge your progress" true; exit 1;
     fi;
 }

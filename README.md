@@ -1,14 +1,15 @@
 hal9087/git-bump-sh
 ==============================
 
-Simple shell script to bump a new version of a package with git.
+A **Unix-like** shell command to bump a new version of a "package" with git.
 
 [![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg)](https://travis-ci.org/hal9087/git-bump-sh)
 
 ## Conventions, limitations and assumptions 
 
 * Follows semantic versioning
-* In your project there are two required main branches called master and dev
+* In your project there are two required main branches, one branch for active development (default name:'dev') 
+and one branch for releases (default name:'master')
 * Tags are only used to mark releases
 * You must run this command from the root of your project folder
 
@@ -59,13 +60,14 @@ This would install an executable script ```./node_modules/.bin/bump```.
 ```
 Usage:
 
-bump [<version-file>] [--release-type=<type>] [--changes-file=<path>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [--changes-file=<path>]
+     [-s|--silent] [--force] [--sync-dev=<flag>]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
      [--no-interactive] [--no-color] [-h|--help] [--version]
 
 Arguments:
 
-* version-file : path to version file (default: version)
+* version-file : path to yml version file (default: version.yml)
 
 Options:
 
@@ -73,6 +75,7 @@ Options:
 * --changes-file=<path>      : use <path> to prepend change message (default: CHANGELOG.md)
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
+* --sync-dev=<flag>          : rebasing master progress into dev after success (default:"", possible are: true|false|""), required when --no-interactive
 * --pre-cmd=<command>        : execute <command> before bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --after-cmd=<command>      : execute <command> after successful bump
@@ -90,6 +93,8 @@ To provide default options you can use a ```.bumprc``` file in your project root
 #.bumprc
 
 # THOSE ARE DEFAULTS OPTIONS
+MASTER_BRANCH="master"
+DEV_BRANCH="dev"
 VERSION_FILE="version"
 CHANGES_FILE="CHANGELOG.md"
 SILENT=false

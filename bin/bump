@@ -3,6 +3,8 @@
 source $(dirname $0)/bump_functions.sh
 
 # DEFAULT OPTIONS
+MASTER_BRANCH="master"
+DEV_BRANCH="dev"
 VERSION_FILE="version"
 CHANGES_FILE="CHANGELOG.md"
 SILENT=false
@@ -11,6 +13,7 @@ PRE_CMD=""
 AFTER_CMD=""
 PRE_COMMIT_CMD=""
 FORCE=false
+SYNC_DEV=""
 
 # SOURCE CONFIGURATION FILE IF EXISTS
 CONFIGURATION_FILE=".bumprc"
@@ -58,6 +61,11 @@ case $i in
     ;;
     --force)
     FORCE=true
+    shift # past argument=value
+    ;;
+    --sync-dev=*)
+    SYNC_DEV="${i#*=}"
+    shift # past argument=value
     ;;
     --no-interactive)
     NO_INTERACTIVE=true
@@ -83,12 +91,16 @@ case $i in
 esac
 done
 
+if [ ${NO_INTERACTIVE} = true ] && [ -z ${SYNC_DEV} ]; then
+    echo_help; echo_error "you have to specifiy a --sync-dev=<flag> while non-interactive mode" true; exit 1;
+fi;
+
 # EXECUTE PRE-CMD
 execute_cmd "${PRE_CMD}" "pre-cmd"
 
 if [ ${FORCE} = false ]; then
     # if current branch is not master abort
-    git_check_current_branch_is_master
+    git_check_current_branch_is_master ${MASTER_BRANCH}
 
     # git check working directory is clean
     git_check_working_directory_clean
@@ -111,7 +123,7 @@ git_fetch_all
 # GET CURRENT LAST RELEASE TAG
 CURRENT_TAG=$(git_last_tag)
 if [ -z "$CURRENT_TAG" ]; then
-    echo_info "can't find current tag into origin/master, assume it's the first release"
+    echo_info "git can't find current last tag, assume it's the first release"
 fi
 
 if [ ! -z "$CURRENT_TAG" ]; then
@@ -220,12 +232,10 @@ git_commit "${GIT_MESSAGE}"
 git_add_tag ${NEW_TAG} "${GIT_MESSAGE}"
 
 # GIT PUSH MASTER AND TAG
-git_push ${NEW_TAG} ${SILENT}
+git_push ${MASTER_BRANCH} ${NEW_TAG} ${SILENT}
 
-if [ ${NO_INTERACTIVE} = false ]; then
-    # GIT "RESYNC" DEV BRANCH (REBASE AND PUSH)
-    git_resync_dev_branch ${SILENT}
-fi;
+# GIT "RESYNC" DEV BRANCH (REBASE AND PUSH)
+git_resync_dev_branch ${DEV_BRANCH} ${MASTER_BRANCH} ${SILENT} ${NO_INTERACTIVE} ${SYNC_DEV}
 
 # EXECUTE AFTER COMMAND
 execute_cmd "${AFTER_CMD}" "after-cmd"

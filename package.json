@@ -1,7 +1,7 @@
 {
   "name": "hal9087-git-bump-sh",
   "version": "1.0.0",
-  "description": "Simple shell script to bump a new version of a package with git.",
+  "description": "A **Unix-like** shell command to bump a new version of a 'package' with git.",
   "main": "bin/bump",
   "bin": { "bump" : "bin/bump", "bump_functions.sh" : "bin/bump_functions.sh" },
   "scripts": {
