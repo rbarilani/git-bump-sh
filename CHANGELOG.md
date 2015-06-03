@@ -1,3 +1,8 @@
+# 1.1.0 (2015-06-03)
+
+- def1c89 adds --sync-dev options, adds fix, updates README [Ruben Barilani]
+
+
 # 1.0.0 (2015-06-03)
 
 ## new features
