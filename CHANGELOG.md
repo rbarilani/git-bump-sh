@@ -1,3 +1,8 @@
+# 1.1.1 (2015-06-03)
+
+- a3dc6aa updates composer.json description [Ruben Barilani]
+
+
 # 1.1.0 (2015-06-03)
 
 - def1c89 adds --sync-dev options, adds fix, updates README [Ruben Barilani]
