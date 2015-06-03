@@ -42,9 +42,9 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [<version-file>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [-s|--silent] [--force]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
-     [--no-color] [-h|--help] [--version]
+     [--no-interactive] [--no-color] [-h|--help] [--version]
 
 Arguments:
 
@@ -52,11 +52,13 @@ Arguments:
 
 Options:
 
+* --release-type=<type>      : provide <type> (fix or minor or major) for the release, required when --no-interactive
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
 * --pre-cmd=<command>        : execute <command> before bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --after-cmd=<command>      : execute <command> after successful bump
+* --no-interactive           : turn off interaction
 * --no-color                 : turn off colored messages
 * -h or --help               : print this help
 * --version                  : print version
@@ -117,10 +119,14 @@ bump_version_file() {
 }
 
 write_temp_changelog_md() {
-    echo -e "${1}" > "${CHANGE_MESSAGE_FILE_TMP}";
 
-    vi ${CHANGE_MESSAGE_FILE} -c ":r ${CHANGE_MESSAGE_FILE_TMP}"
-    rm -f ${CHANGE_MESSAGE_FILE_TMP};
+    if [ -n "${2-}" ] && [ "${2}" = true ]; then
+        echo -e "${1}" > "${CHANGE_MESSAGE_FILE}";
+    else
+        echo -e "${1}" > "${CHANGE_MESSAGE_FILE_TMP}";
+        vi ${CHANGE_MESSAGE_FILE} -c ":r ${CHANGE_MESSAGE_FILE_TMP}"
+        rm -f ${CHANGE_MESSAGE_FILE_TMP};
+    fi;
 
     if [ ! -f ${CHANGE_MESSAGE_FILE} ]; then
         echo_error "new changelog message doesn't exist" true; exit 1;
@@ -173,6 +179,12 @@ execute_cmd(){
         eval "${cmd}";
         [ $? = 1 ] && echo_error "${2}=\"${1}\" fails" true && exit 1;
     fi
+}
+
+check_release_type() {
+    if ! [[ ${1} =~ ^(major)$|^(minor)$|^(fix)$ ]]; then
+        echo_error "wrong release type. value should be major, minor or fix" true; exit 1;
+    fi;
 }
 
 #

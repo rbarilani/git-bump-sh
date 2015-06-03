@@ -60,21 +60,23 @@ This would install an executable script ```./node_modules/.bin/bump```.
 ```
 Usage:
 
-bump [<version-file>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [-s|--silent] [--force]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
-     [--no-color] [-h|--help] [--version]
+     [--no-interactive] [--no-color] [-h|--help] [--version]
 
 Arguments:
 
-* version-file : path to yml version file (default: version)
+* version-file : path to yml version file (default: version.yml)
 
 Options:
 
+* --release-type=<type>      : provide <type> (fix or minor or major) for the release, required when --no-interactive
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
 * --pre-cmd=<command>        : execute <command> before bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --after-cmd=<command>      : execute <command> after successful bump
+* --no-interactive           : turn off interaction
 * --no-color                 : turn off colored messages
 * -h or --help               : print this help
 * --version                  : print version

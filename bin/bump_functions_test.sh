@@ -93,4 +93,25 @@ test_bump_npm_package_version() {
     cd - 1> /dev/null;
 }
 
+test_check_release_type() {
+    RESULT=$(check_release_type "alpha")
+    assertTrue "must fail" "[ $? = 1 ]"
+    assertEquals "(ERROR) wrong release type. value should be major, minor or fix ..aborting" "$(echo ${RESULT})"
+
+    RESULT=$(check_release_type "minor")
+    assertTrue "'minor' must not fail" "[ $? = 0 ]"
+
+    RESULT=$(check_release_type "major")
+    assertTrue "'major' must not fail" "[ $? = 0 ]"
+
+    RESULT=$(check_release_type "fix")
+    assertTrue "'fix' must not fail" "[ $? = 0 ]"
+
+    RESULT=$(check_release_type "a")
+    assertTrue "'a' must fail" "[ $? = 1 ]"
+
+    RESULT=$(check_release_type "aminors")
+    assertTrue "'aminors' must fail" "[ $? = 1 ]"
+}
+
 . $(dirname $0)/../vendor/shunit2-2.0.3/src/shell/shunit2
