@@ -1,6 +1,6 @@
 {
     "name": "hal9087/git-bump-sh",
-    "description": "Simple shell script to bump a new version of a package with git",
+    "description": "A **Unix-like** shell command to bump a new version of a 'package' with git.",
     "type": "bin",
     "license": "MIT",
     "authors": [
