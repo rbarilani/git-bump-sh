@@ -99,7 +99,7 @@ echo_info() {
 echo_success() {
     local message="(SUCCESS) ${1}"
 
-    if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = true ]; then
+    if [ -n "${NO_COLOR-}" ] && [ "${NO_COLOR}" = false ]; then
         echo -e "${BOLD_GREEN}{$message}${TEXT_RESET}"
     else
         echo -e "${message}"
