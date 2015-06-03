@@ -1,3 +1,32 @@
+# 1.0.0 (2015-06-03)
+
+## new features
+
+- configuration .bumprc file
+- more options 
+- optionally not interactive
+- cmd hooks
+
+
+## breaking changes
+
+- changes version-file default from app/config/version.yml to version
+- version-file it's a simple text file
+
+## commits:
+
+- f30dd4c updates README [Ruben Barilani]
+- 13ff6fa add --changes-file option [Ruben Barilani]
+- ec2a2aa adds --no-interactive, --release-type options [Ruben Barilani]
+- ef938cf no more yaml, updates README [Ruben Barilani]
+- 942a72c updates echo_help, updates README [Ruben Barilani]
+- ffb8689 updates README.md with infos about placeholders [Ruben Barilani]
+- 599f32b exit on unknown option [Ruben Barilani]
+- 86e6caa adds --force options [Ruben Barilani]
+- 0fc8037 adds --version option [Ruben Barilani]
+- 14d3f2e adds --pre-commit-cmd option, adds placeholders [Ruben Barilani]
+
+
 # 0.8.2 (2015-06-02)
 
 - ed644ea renaming variables [Ruben Barilani]
