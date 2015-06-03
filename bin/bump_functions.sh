@@ -42,7 +42,7 @@ echo_help() {
     echo -e "
 Usage:
 
-bump [<version-file>] [--release-type=<type>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [--changes-file=<path>] [-s|--silent] [--force]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
      [--no-interactive] [--no-color] [-h|--help] [--version]
 
@@ -53,6 +53,7 @@ Arguments:
 Options:
 
 * --release-type=<type>      : provide <type> (fix or minor or major) for the release, required when --no-interactive
+* --changes-file=<path>      : use <path> to prepend change message (default: CHANGELOG.md)
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
 * --pre-cmd=<command>        : execute <command> before bump

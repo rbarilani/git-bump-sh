@@ -9,9 +9,8 @@ Simple shell script to bump a new version of a package with git.
 
 * Follows semantic versioning
 * In your project there are two required main branches called master and dev
-* Tags are only used to mark a release
-* a markdown file is used to track changes (CHANGELOG)
-* You must run this command from the root of your project folder (where CHANGELOG resides)
+* Tags are only used to mark releases
+* You must run this command from the root of your project folder
 
 ## Install
 
@@ -60,7 +59,7 @@ This would install an executable script ```./node_modules/.bin/bump```.
 ```
 Usage:
 
-bump [<version-file>] [--release-type=<type>] [-s|--silent] [--force]
+bump [<version-file>] [--release-type=<type>] [--changes-file=<path>] [-s|--silent] [--force]
      [--pre-cmd=<command>] [--pre-commit-cmd=<command>] [--after-cmd=<command>]
      [--no-interactive] [--no-color] [-h|--help] [--version]
 
@@ -71,6 +70,7 @@ Arguments:
 Options:
 
 * --release-type=<type>      : provide <type> (fix or minor or major) for the release, required when --no-interactive
+* --changes-file=<path>      : use <path> to prepend change message (default: CHANGELOG.md)
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
 * --pre-cmd=<command>        : execute <command> before bump
@@ -85,6 +85,23 @@ Options:
 ### .bumprc
 
 To provide default options you can use a ```.bumprc``` file in your project root:
+
+```bash
+#.bumprc
+
+# THOSE ARE DEFAULTS OPTIONS
+VERSION_FILE="version"
+CHANGES_FILE="CHANGELOG.md"
+SILENT=false
+NO_COLOR=false
+PRE_CMD=""
+AFTER_CMD=""
+PRE_COMMIT_CMD=""
+FORCE=false
+
+```
+
+Example: 
 
 ```bash
 # .bumprc
