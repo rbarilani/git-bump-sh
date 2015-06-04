@@ -161,6 +161,8 @@ assertFirstLineMatch() {
 
   if ! [[ "$(echo "${actual}" | head -n 1)" =~ ${pattern} ]]; then
     fail "first line match.${msg}. pattern was:<${pattern}>, actual was:<${actual}>"
+  else
+    assertTrue 0
   fi;
 }
 
@@ -175,6 +177,8 @@ assertMatch() {
 
   if ! [[ "$(echo "${actual}")" =~ ${pattern} ]]; then
     fail "match.${msg}. pattern was:<${pattern}>, actual was:<${actual}>"
+  else
+    assertTrue 0
   fi;
 }
 
