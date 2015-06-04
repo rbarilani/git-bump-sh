@@ -10,11 +10,17 @@
         }
     ],
     "require": {},
+    "require-dev" : {
+        "hal9087/shunit2-test-runner" : "dev-master"
+    },
     "bin": ["bin/bump", "bin/bump_functions.sh"],
     "scripts": {
         "post-install-cmd": [
             "cd vendor && { curl -L \"http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz\" | tar zx ; cd -; }"
         ],
         "test": "bash test.sh"
-    }
+    },
+    "repositories" : [
+        { "type": "git", "url" : "https://github.com/hal9087/shunit2-test-runner.git" }
+    ]
 }

@@ -151,16 +151,11 @@ to the ```.bumprc``` file in this project.
 
 #### Install shunit2
 
-Install [shunit2] manually 
+Install [shunit2] manually and the [test runner] with npm
 
 ```
 cd vendor && curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -;
-```
-
-or with the help of composer post install hook
-
-```
-composer install
+npm install;
 ```
 
 #### Run tests
@@ -170,5 +165,5 @@ bash test.sh
 ```
 
 [shunit2]: https://code.google.com/p/shunit2/
-
+[test runner]: https://github.com/hal9087/shunit2-test-runner
 
