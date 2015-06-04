@@ -1,6 +1,7 @@
 language: bash
 
 before_script:
+    - git --version; git config --global user.email "you@example.com"; git config --global user.name "Your Name"
     - cd vendor && { curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx ; cd -; }
 
 script:
