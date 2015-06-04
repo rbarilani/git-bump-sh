@@ -57,7 +57,8 @@ Options:
 * --changes-file=<path>      : use <path> to prepend change message (default: CHANGELOG.md)
 * -s or --silent             : don't push to remote
 * --force                    : bypass checks
-* --sync-dev=<flag>          : rebasing master progress into dev after success (default:"", possible are: true|false|""), required when --no-interactive
+* --sync-dev=<flag>          : rebasing master progress into dev after success. (<flag>: true or false or '', default: '')
+                               required when --no-interactive
 * --pre-cmd=<command>        : execute <command> before bump
 * --pre-commit-cmd=<command> : execute <command> before git commit
 * --after-cmd=<command>      : execute <command> after successful bump
