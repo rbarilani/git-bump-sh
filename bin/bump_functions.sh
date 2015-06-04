@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION="1.1.3"
+VERSION="1.1.4"
 
 CHANGE_MESSAGE_FILE=".bump_changes"
 CHANGE_MESSAGE_FILE_TMP=".bump_changes.tmp"

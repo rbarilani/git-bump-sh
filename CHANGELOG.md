@@ -1,3 +1,8 @@
+# 1.1.4 (2015-06-04)
+
+- 9e3a9e1 fix travis failing [Ruben Barilani]
+
+
 # 1.1.3 (2015-06-04)
 
 - ec78ca1 updates help and readme, fix echo_success [Ruben Barilani]
