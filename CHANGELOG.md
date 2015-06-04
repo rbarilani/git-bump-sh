@@ -1,3 +1,8 @@
+# 1.1.3 (2015-06-04)
+
+- ec78ca1 updates help and readme, fix echo_success [Ruben Barilani]
+
+
 # 1.1.2 (2015-06-03)
 
 - 5b2132f adds bump functional test, fix echo_success with --no-color [Ruben Barilani]
