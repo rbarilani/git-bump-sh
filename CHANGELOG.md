@@ -1,3 +1,8 @@
+# 1.1.6 (2015-06-04)
+
+- 4fd275e command hook fail if executed command doesn't exit with 0,  adds --pre-cmd when executing bump_test expecting success, failing test restored [Ruben Barilani]
+
+
 # 1.1.5 (2015-06-04)
 
 - e629f8d updates help and doc [Ruben Barilani]
