@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+GLOB="bin/*_test.sh"

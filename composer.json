@@ -11,7 +11,7 @@
     ],
     "require": {},
     "require-dev" : {
-        "hal9087/shunit2-test-runner" : "dev-master"
+        "hal9087/shunit2-test-runner" : "~0.2"
     },
     "bin": ["bin/bump", "bin/bump_functions.sh"],
     "scripts": {
