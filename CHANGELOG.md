@@ -1,3 +1,11 @@
+# 1.2.0 (2015-06-04)
+
+- 4e0465e updates hal9087/shunit2-test-runner, run npm update [Ruben Barilani]
+- 64f19f3 move out the test runner [Ruben Barilani]
+- f39c4ec extracts shunit command, a command to run multiple shunit tests scripts [Ruben Barilani]
+- 6dafb76 fix custom assertions, updates test runner [Ruben Barilani]
+
+
 # 1.1.6 (2015-06-04)
 
 - 4fd275e command hook fail if executed command doesn't exit with 0,  adds --pre-cmd when executing bump_test expecting success, failing test restored [Ruben Barilani]
