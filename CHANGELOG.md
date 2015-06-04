@@ -1,3 +1,8 @@
+# 1.1.5 (2015-06-04)
+
+- e629f8d updates help and doc [Ruben Barilani]
+
+
 # 1.1.4 (2015-06-04)
 
 - 9e3a9e1 fix travis failing [Ruben Barilani]
