@@ -181,7 +181,7 @@ execute_cmd(){
     then
         local cmd=$(replace_cmd_placeholders "${1}")
         eval "${cmd}";
-        [ $? = 1 ] && echo_error "${2}=\"${1}\" fails" true && exit 1;
+        [ $? != 0 ] && echo_error "${2}=\"${1}\" fails" true && exit 1;
     fi
 }
 

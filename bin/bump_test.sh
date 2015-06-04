@@ -55,17 +55,14 @@ test_no_interactive_no_sync_dev_throw_error() {
     assertLastLineEquals "${expected_output}" "${RESULT}"
 }
 
-#
-# FIXME - this fails on travis-ci
-#
-#test_execute_pre_command_and_exit_in_case_of_error_exit_code() {
-#    local wrong_pre_cmd="ls --jjjj 2> /dev/null";
-#    local expected_output="(ERROR) pre-cmd=\"${wrong_pre_cmd}\" fails ..aborting"
-#
-#    RESULT="$(${COMMAND} --no-color --no-interactive --sync-dev=false --pre-cmd="${wrong_pre_cmd}")"
-#    assertExitWithError $?
-#    assertLastLineEquals "${expected_output}" "${RESULT}"
-#}
+test_execute_pre_command_and_exit_in_case_of_error_exit_code() {
+    local wrong_pre_cmd="ls --jjjj 2> /dev/null";
+    local expected_output="(ERROR) pre-cmd=\"${wrong_pre_cmd}\" fails ..aborting"
+
+    RESULT="$(${COMMAND} --no-color --no-interactive --sync-dev=false --pre-cmd="${wrong_pre_cmd}")"
+    assertExitWithError $?
+    assertLastLineEquals "${expected_output}" "${RESULT}"
+}
 
 test_error_if_not_on_master_branch() {
     git checkout -b dev
@@ -103,13 +100,13 @@ __test_bump_success() {
     git add test.txt;
     git commit -m "adds test.txt" 1> /dev/null;
 
-    RESULT="$(${COMMAND} --no-color --no-interactive --sync-dev=false --release-type=${release_type})"
+    RESULT="$(${COMMAND} --no-color --pre-cmd="echo 'hgiuj08928jk'" --no-interactive --sync-dev=false --release-type=${release_type})"
     assertExitWithSuccess $?
     assertLastLineEquals "${expected_output}" "${RESULT}"
-
     assertFirstLineMatch "changelog is changed" "${expected_version}" "$(cat CHANGELOG.md)"
     assertFirstLineMatch "last commit have the right message" "${expected_version}" "$(git log -n 1 --pretty="${format}")"
     assertFirstLineEquals "${expected_version}" "$(cat version)"
+    assertMatch "hgiuj08928jk" "${RESULT}"
 }
 
 test_bump_fix_success() {
@@ -164,6 +161,20 @@ assertFirstLineMatch() {
 
   if ! [[ "$(echo "${actual}" | head -n 1)" =~ ${pattern} ]]; then
     fail "first line match.${msg}. pattern was:<${pattern}>, actual was:<${actual}>"
+  fi;
+}
+
+assertMatch() {
+  local msg=''
+  if [ $# -eq 3 ]; then
+    msg=$1
+    shift
+  fi
+  local pattern=$1
+  local actual=$2
+
+  if ! [[ "$(echo "${actual}")" =~ ${pattern} ]]; then
+    fail "match.${msg}. pattern was:<${pattern}>, actual was:<${actual}>"
   fi;
 }
 
