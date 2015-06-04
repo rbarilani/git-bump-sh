@@ -67,7 +67,7 @@ bump [<version-file>] [--release-type=<type>] [--changes-file=<path>]
 
 Arguments:
 
-* version-file : path to yml version file (default: version.yml)
+* version-file : path to the version file (default: version)
 
 Options:
 
@@ -92,18 +92,18 @@ To provide default options you can use a ```.bumprc``` file in your project root
 ```bash
 #.bumprc
 
-# THOSE ARE DEFAULTS OPTIONS
+# THOSE ARE DEFAULTS 
 MASTER_BRANCH="master"
 DEV_BRANCH="dev"
 VERSION_FILE="version"
 CHANGES_FILE="CHANGELOG.md"
 SILENT=false
 NO_COLOR=false
+FORCE=false
+SYNC_DEV=""
 PRE_CMD=""
 AFTER_CMD=""
 PRE_COMMIT_CMD=""
-FORCE=false
-
 ```
 
 Example: 
