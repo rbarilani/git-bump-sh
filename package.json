@@ -1,5 +1,5 @@
 {
-  "name": "hal9087-git-bump-sh",
+  "name": "rbarilani-git-bump-sh",
   "version": "1.2.0",
   "description": "A **Unix-like** shell command to bump a new version of a 'package' with git.",
   "main": "bin/bump",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hal9087/git-bump-sh.git"
+    "url": "https://github.com/rbarilani/git-bump-sh.git"
   },
   "keywords": [
     "Bash",
@@ -19,13 +19,13 @@
     "CHANGELOG",
     "git"
   ],
-  "author": "Ruben Barilani <ruben.barilani.dev@gmail.com> (https://github.com/hal9087)",
+  "author": "Ruben Barilani <ruben.barilani.dev@gmail.com> (https://github.com/rbarilani)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hal9087/git-bump-sh/issues"
+    "url": "https://github.com/rbarilani/git-bump-sh/issues"
   },
-  "homepage": "https://github.com/hal9087/git-bump-sh",
+  "homepage": "https://github.com/rbarilani/git-bump-sh",
   "dependencies": {
-    "hal9087-shunit2-test-runner": "git+https://github.com/hal9087/shunit2-test-runner.git"
+    "rbarilani-shunit2-test-runner": "git+https://github.com/rbarilani/shunit2-test-runner.git"
   }
 }

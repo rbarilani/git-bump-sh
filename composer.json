@@ -1,5 +1,5 @@
 {
-    "name": "hal9087/git-bump-sh",
+    "name": "rbarilani/git-bump-sh",
     "description": "A **Unix-like** shell command to bump a new version of a 'package' with git.",
     "type": "bin",
     "license": "MIT",
@@ -11,7 +11,7 @@
     ],
     "require": {},
     "require-dev" : {
-        "hal9087/shunit2-test-runner" : "~0.2"
+        "rbarilani/shunit2-test-runner" : "~1.0"
     },
     "bin": ["bin/bump", "bin/bump_functions.sh"],
     "scripts": {
@@ -21,6 +21,6 @@
         "test": "bash test.sh"
     },
     "repositories" : [
-        { "type": "git", "url" : "https://github.com/hal9087/shunit2-test-runner.git" }
+        { "type": "git", "url" : "https://github.com/rbarilani/shunit2-test-runner.git" }
     ]
 }

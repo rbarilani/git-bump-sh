@@ -1,9 +1,9 @@
-hal9087/git-bump-sh
+rbarilani/git-bump-sh
 ==============================
 
 A **Unix-like** shell command to bump a new version of a "package" with git.
 
-[![Build Status](https://travis-ci.org/hal9087/git-bump-sh.svg)](https://travis-ci.org/hal9087/git-bump-sh)
+[![Build Status](https://travis-ci.org/rbarilani/git-bump-sh.svg)](https://travis-ci.org/rbarilani/git-bump-sh)
 
 ## Conventions, limitations and assumptions 
 
@@ -18,7 +18,7 @@ and one branch for releases (default name:'master')
 ### Using git
 
 ```
-git clone https://github.com/hal9087/git-bump-sh.git 
+git clone https://github.com/rbarilani/git-bump-sh.git 
 ```
 
 This would install an executable script ```./git-bump-sh/bin/bump```.
@@ -26,15 +26,15 @@ This would install an executable script ```./git-bump-sh/bin/bump```.
 
 ### Using composer
 
-Adds this to your composer.json and run ```composer update hal9087/git-bump-sh```:
+Adds this to your composer.json and run ```composer update rbarilani/git-bump-sh```:
 
 ```json
 {
     "require": {
-        "hal9087/git-bump-sh" : "dev-master"
+        "rbarilani/git-bump-sh" : "dev-master"
     },
     "repositories" : [
-        { "type":"git", "url":"https://github.com/hal9087/git-bump-sh.git" }
+        { "type":"git", "url":"https://github.com/rbarilani/git-bump-sh.git" }
     ]
 }
 ```
@@ -48,7 +48,7 @@ Adds this to your package.json and run ```npm install```:
 ```json
 {
     "dependencies": {
-        "hal9087-git-bump-sh" : "git+https://github.com/hal9087/git-bump-sh.git"
+        "rbarilani-git-bump-sh" : "git+https://github.com/rbarilani/git-bump-sh.git"
     }
 }
 ```
