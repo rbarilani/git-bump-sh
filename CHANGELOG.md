@@ -1,3 +1,10 @@
+# 1.3.0 (2015-06-07)
+
+BC - github user and package renamed 
+
+- 2ab2829 renames github user [Ruben Barilani]
+
+
 # 1.2.0 (2015-06-04)
 
 - 4e0465e updates hal9087/shunit2-test-runner, run npm update [Ruben Barilani]
